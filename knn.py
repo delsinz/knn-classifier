@@ -6,6 +6,7 @@ def main():
     print(preprocess_data('data.data')[0][0])
     print(convert_categorical_attribute(preprocess_data('data.data')[0][0]))
     print(euclidean_dist([1,0], [1,0]))
+    print(cos_sim([1, 0], [0,0]))
 
 
 
@@ -62,7 +63,7 @@ def compare_instance(instance_0, instance_1, method = 'euclidean'):
     if method == 'euclidean':
         return euclidean_dist(instance_0, instance_1)
     elif method == 'cos':
-        return cos_dist(instance_0, instance_1)
+        return cos_sim(instance_0, instance_1)
     elif method == 'manhattan':
         return manhattan_dist(instance_0, instance_1)
     else:
@@ -80,8 +81,20 @@ def euclidean_dist(instance_0, instance_1):
 
 
 
-def cos_dist(instance_0, instance_1):
-    return 0
+def cos_sim(instance_0, instance_1):
+    mag_0 = 0
+    mag_1 = 0
+    dot_prod = 0
+    for i in range(len(instance_0)):
+        mag_0 += instance_0[i] ** 2
+        mag_1 += instance_1[i] ** 2
+        dot_prod += instance_0[i] * instance_1[i]
+    mag_0 = mag_0 ** 0.5
+    mag_1 = mag_1 ** 0.5
+    if(mag_0 * mag_1 == 0): # Orthogonal
+        return 0
+    else:
+        return dot_prod / (mag_0 * mag_1)
 
 
 
