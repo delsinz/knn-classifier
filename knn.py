@@ -5,6 +5,7 @@ import csv
 def main():
     print(preprocess_data('data.data')[0][0])
     print(convert_categorical_attribute(preprocess_data('data.data')[0][0]))
+    print(euclidean_dist([1,0], [1,0]))
 
 
 
@@ -54,8 +55,39 @@ def preprocess_data(filename, abalone = 2):
 
 
 
-def compare_instance(instance_0, instance_1, method):
+def compare_instance(instance_0, instance_1, method = 'euclidean'):
+    instance_0 = convert_categorical_attribute(instance_0)
+    instance_1 = convert_categorical_attribute(instance_1)
+
+    if method == 'euclidean':
+        return euclidean_dist(instance_0, instance_1)
+    elif method == 'cos':
+        return cos_dist(instance_0, instance_1)
+    elif method == 'manhattan':
+        return manhattan_dist(instance_0, instance_1)
+    else:
+        return 0
+
+
+
+def euclidean_dist(instance_0, instance_1):
+    # Assuming both instances have the same num of attributes
+    length = len(instance_0)
+    square_sum = 0
+    for i in range(length):
+        square_sum += (instance_0[i] - instance_1[i]) ** 2
+    return square_sum ** 0.5
+
+
+
+def cos_dist(instance_0, instance_1):
     return 0
+
+
+
+def manhattan_dist(instance_0, instance_1):
+    return 0
+
 
 
 # Break categorical attribute Sex into 3 binary attributes: M, F, I
