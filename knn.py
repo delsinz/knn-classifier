@@ -7,6 +7,7 @@ def main():
     print(convert_categorical_attribute(preprocess_data('data.data')[0][0]))
     print(euclidean_dist([1,0], [1,0]))
     print(cos_sim([1, 0], [0,0]))
+    print(manhattan_dist([1, 0], [0,0]))
 
 
 
@@ -99,7 +100,10 @@ def cos_sim(instance_0, instance_1):
 
 
 def manhattan_dist(instance_0, instance_1):
-    return 0
+    total = 0
+    for i in range(len(instance_0)):
+        total += abs(instance_0[i] - instance_1[i])
+    return total
 
 
 
