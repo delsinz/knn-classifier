@@ -3,11 +3,7 @@ import csv
 
 
 def main():
-    print(preprocess_data('data.data')[0][0])
-    print(convert_categorical_attribute(preprocess_data('data.data')[0][0]))
-    print(euclidean_dist([1,0], [1,0]))
-    print(cos_sim([1, 0], [0,0]))
-    print(manhattan_dist([1, 0], [0,0]))
+    print(get_neighbors(preprocess_data('data.data')[0][0], preprocess_data('data.data'), 7, 'cos'))
 
 
 
@@ -52,7 +48,7 @@ def preprocess_data(filename, abalone = 2):
             class_labels.append(label)
 
     # Construct data set
-    data_set = [instances, class_labels]
+    data_set = (instances, class_labels)
     return data_set
 
 
@@ -69,6 +65,24 @@ def compare_instance(instance_0, instance_1, method = 'euclidean'):
         return manhattan_dist(instance_0, instance_1)
     else:
         return 0
+
+
+
+def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
+    # Get class labels and scores
+    training_instances = training_data_set[0]
+    class_labels = training_data_set[1]
+    size = len(training_instances)
+    scores = []
+    for i in range(size):
+        scores.append((class_labels[i], compare_instance(instance, training_instances[i], method)))
+    # Sort result
+    sorted_scores = []
+    if method == 'cos': # For cos sim, larger values are better
+        sorted_scores = list(reversed(sorted(scores, key=lambda x:x[1])))
+    else: # For euclidean dist and manhattan dist, smaller values are better
+        sorted_scores = sorted(scores, key=lambda x:x[1])
+    return sorted_scores[:k]
 
 
 
