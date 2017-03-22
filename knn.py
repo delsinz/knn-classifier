@@ -3,10 +3,11 @@ import csv
 
 
 def main():
-    print(preprocess_data('data.data'))
+    print(preprocess_data('data.data')[1])
 
 
 
+# Returns [[8 attributes], [class_label]]
 def preprocess_data(filename, abalone = 2):
     # Load data
     file = open(filename)
@@ -14,14 +15,21 @@ def preprocess_data(filename, abalone = 2):
 
     # Construct instance list
     instances = []
+    to_be_predicted = []
     for row in reader:
-        instances.append(row)
+        instance = []
+        for attribute in row:
+            try:
+                instance.append(float(attribute))
+            except ValueError:
+                instance.append(attribute)
+        instances.append(instance[:len(instance) - 1])
+        to_be_predicted.append(instance[len(instance) - 1])
 
     # Construct class labels
     class_labels = []
     if abalone == 3:
-        for instance in instances:
-            rings = int(instance[8])
+        for rings in to_be_predicted:
             label = ''
             if rings <= 8:
                 label = 'very-young'
@@ -31,8 +39,7 @@ def preprocess_data(filename, abalone = 2):
                 label = 'old'
             class_labels.append(label)
     else:
-        for instance in instances:
-            rings = int(instance[8])
+        for rings in to_be_predicted:
             label = ''
             if rings <= 10:
                 label = 'young'
@@ -46,6 +53,14 @@ def preprocess_data(filename, abalone = 2):
 
 
 
+def compare_instance(instance_0, instance_1, method):
+    return 0
+
+
+
+def handle_categorical_attribute(instance):
+    # Assuming the attributes are provided in the given order
+    return 0
 
 
 if __name__ == '__main__':
