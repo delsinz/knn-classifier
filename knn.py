@@ -1,9 +1,12 @@
 import csv
+from collections import Counter
 
 
 
 def main():
-    print(get_neighbors(preprocess_data('data.data')[0][0], preprocess_data('data.data'), 7, 'cos'))
+    print(preprocess_data('data.data', 3))
+    print(get_neighbors(preprocess_data('data.data', 3)[0][0], preprocess_data('data.data'), 100, 'cos'))
+    print(predict_equal_weight(get_neighbors(preprocess_data('data.data', 3)[0][0], preprocess_data('data.data'), 100, 'cos')))
 
 
 
@@ -84,6 +87,29 @@ def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
         sorted_scores = sorted(scores, key=lambda x:x[1])
     return sorted_scores[:k]
 
+
+
+def predict_class(neighbors, method = 'ew'):
+    if method == 'ew':
+        return predict_equal_weight(neighbors)
+    elif method == 'ild':
+        return 0
+    elif method == 'id':
+        return 0
+    else:
+        return 0
+
+
+
+def predict_equal_weight(neighbors):
+    labels = [neighbor[0] for neighbor in neighbors]
+    label_counts = dict(Counter(labels))
+    return max(label_counts, key=label_counts.get)
+
+
+
+def predict_inverse_linear_dist(neighbors):
+    return 0
 
 
 def euclidean_dist(instance_0, instance_1):
