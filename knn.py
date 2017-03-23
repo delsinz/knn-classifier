@@ -1,12 +1,15 @@
 import csv
-from collections import Counter
+from collections import Counter, defaultdict
 
 
 
 def main():
-    print(preprocess_data('data.data', 3))
-    print(get_neighbors(preprocess_data('data.data', 3)[0][0], preprocess_data('data.data'), 100, 'cos'))
-    print(predict_equal_weight(get_neighbors(preprocess_data('data.data', 3)[0][0], preprocess_data('data.data'), 100, 'cos')))
+    data_set = preprocess_data('data.data', 3)
+    instance = data_set[0][16]
+    neighbors = get_neighbors(instance, data_set, 20, 'cos')
+    print(neighbors)
+    print(predict_class(neighbors, 'ew'))
+    print(predict_class(neighbors, 'ild'))
 
 
 
@@ -63,7 +66,7 @@ def compare_instance(instance_0, instance_1, method = 'euclidean'):
     if method == 'euclidean':
         return euclidean_dist(instance_0, instance_1)
     elif method == 'cos':
-        return cos_sim(instance_0, instance_1)
+        return cos_dist(instance_0, instance_1)
     elif method == 'manhattan':
         return manhattan_dist(instance_0, instance_1)
     else:
@@ -80,11 +83,11 @@ def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
     for i in range(size):
         scores.append((class_labels[i], compare_instance(instance, training_instances[i], method)))
     # Sort result
-    sorted_scores = []
-    if method == 'cos': # For cos sim, larger values are better
+    sorted_scores = sorted_scores = sorted(scores, key=lambda x:x[1])
+    '''if method == 'cos': # For cos sim, larger values are better
         sorted_scores = list(reversed(sorted(scores, key=lambda x:x[1])))
     else: # For euclidean dist and manhattan dist, smaller values are better
-        sorted_scores = sorted(scores, key=lambda x:x[1])
+        sorted_scores = sorted(scores, key=lambda x:x[1])'''
     return sorted_scores[:k]
 
 
@@ -93,7 +96,7 @@ def predict_class(neighbors, method = 'ew'):
     if method == 'ew':
         return predict_equal_weight(neighbors)
     elif method == 'ild':
-        return 0
+        return predict_inverse_linear_dist(neighbors)
     elif method == 'id':
         return 0
     else:
@@ -103,12 +106,27 @@ def predict_class(neighbors, method = 'ew'):
 
 def predict_equal_weight(neighbors):
     labels = [neighbor[0] for neighbor in neighbors]
-    label_counts = dict(Counter(labels))
-    return max(label_counts, key=label_counts.get)
+    label_votes = dict(Counter(labels))
+    return max(label_votes, key=label_votes.get)
 
 
 
 def predict_inverse_linear_dist(neighbors):
+    max_dist = max([neighbor[1] for neighbor in neighbors])
+    min_dist = min([neighbor[1] for neighbor in neighbors])
+    label_votes = defaultdict(float)
+    for neighbor in neighbors:
+        weight = 0
+        if max_dist == min_dist:
+            weight = 1
+        else:
+            weight = (max_dist - neighbor[1]) / (max_dist - min_dist)
+        label_votes[neighbor[0]] += weight
+    return max(label_votes, key=label_votes.get)
+
+
+
+def predict_inverse_dist(neighbors):
     return 0
 
 
@@ -122,7 +140,7 @@ def euclidean_dist(instance_0, instance_1):
 
 
 
-def cos_sim(instance_0, instance_1):
+def cos_dist(instance_0, instance_1):
     mag_0 = 0
     mag_1 = 0
     dot_prod = 0
@@ -135,7 +153,9 @@ def cos_sim(instance_0, instance_1):
     if(mag_0 * mag_1 == 0): # Orthogonal
         return 0
     else:
-        return dot_prod / (mag_0 * mag_1)
+        # Give cos dist the same behavior (smaller == better) as euclidean and manhattan
+        # similarity -> distance, thus the negation.
+        return -dot_prod / (mag_0 * mag_1)
 
 
 
