@@ -7,9 +7,9 @@ def main():
     data_set = preprocess_data('data.data', 3)
     instance = data_set[0][16]
     neighbors = get_neighbors(instance, data_set, 20, 'cos')
-    print(neighbors)
     print(predict_class(neighbors, 'ew'))
     print(predict_class(neighbors, 'ild'))
+    print(predict_class(neighbors, 'id'))
 
 
 
@@ -98,9 +98,9 @@ def predict_class(neighbors, method = 'ew'):
     elif method == 'ild':
         return predict_inverse_linear_dist(neighbors)
     elif method == 'id':
-        return 0
+        return predict_inverse_dist(neighbors)
     else:
-        return 0
+        return None
 
 
 
@@ -127,7 +127,12 @@ def predict_inverse_linear_dist(neighbors):
 
 
 def predict_inverse_dist(neighbors):
-    return 0
+    label_votes = defaultdict(float)
+    offset = 2 # Offset > 1 so that weight for cos dis won't be negative due to the way cos dist is handled
+    for neighbor in neighbors:
+        weight = 1 / (neighbor[1] + offset)
+        label_votes[neighbor[0]] += weight
+    return max(label_votes, key=label_votes.get)
 
 
 def euclidean_dist(instance_0, instance_1):
