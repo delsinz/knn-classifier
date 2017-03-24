@@ -1,8 +1,10 @@
+""" Remember to add our names, student IDs here """ 
+
 import csv
 from collections import Counter, defaultdict
 
 
-
+"""Make sure to deal with both abalone = 2 and 3.""" 
 def main():
     data_set = preprocess_data('data.data', 3)
     instance = data_set[0][16]
@@ -13,7 +15,7 @@ def main():
 
 
 
-# Returns [[lists of 8 attributes], [class_label]]
+# Returns ([lists of 8 attributes], [class_label])
 def preprocess_data(filename, abalone = 2):
     # Load data
     file = open(filename)
@@ -133,6 +135,7 @@ def predict_inverse_dist(neighbors):
         weight = 1 / (neighbor[1] + offset)
         label_votes[neighbor[0]] += weight
     return max(label_votes, key=label_votes.get)
+
 
 
 def euclidean_dist(instance_0, instance_1):
