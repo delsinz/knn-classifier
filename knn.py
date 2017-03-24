@@ -5,8 +5,8 @@ from collections import Counter, defaultdict
 
 def main():
     data_set = preprocess_data('data.data', 3)
-    instance = data_set[0][16]
-    neighbors = get_neighbors(instance, data_set, 20, 'cos')
+    instance = data_set[0][2156]
+    neighbors = get_neighbors(instance, data_set, 1000, 'cos')
     print(predict_class(neighbors, 'ew'))
     print(predict_class(neighbors, 'ild'))
     print(predict_class(neighbors, 'id'))
@@ -44,7 +44,7 @@ def preprocess_data(filename, abalone = 2):
             else:
                 label = 'old'
             class_labels.append(label)
-    else:
+    elif abalone == 2:
         for rings in to_be_predicted:
             label = ''
             if rings <= 10:
@@ -52,6 +52,8 @@ def preprocess_data(filename, abalone = 2):
             else:
                 label = 'old'
             class_labels.append(label)
+    else:
+        return None
 
     # Construct data set
     data_set = (instances, class_labels)
@@ -70,7 +72,7 @@ def compare_instance(instance_0, instance_1, method = 'euclidean'):
     elif method == 'manhattan':
         return manhattan_dist(instance_0, instance_1)
     else:
-        return 0
+        return None
 
 
 
@@ -84,11 +86,23 @@ def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
         scores.append((class_labels[i], compare_instance(instance, training_instances[i], method)))
     # Sort result
     sorted_scores = sorted_scores = sorted(scores, key=lambda x:x[1])
-    '''if method == 'cos': # For cos sim, larger values are better
-        sorted_scores = list(reversed(sorted(scores, key=lambda x:x[1])))
-    else: # For euclidean dist and manhattan dist, smaller values are better
-        sorted_scores = sorted(scores, key=lambda x:x[1])'''
     return sorted_scores[:k]
+
+
+# Not necessarily this many metrics, but what the hell. Just pick a few maybe?
+def evaluation(data_set, metric='accuracy'):
+    if metric == 'accuracy':
+        return 0
+    elif metric == 'error': # Error rate
+        return 0
+    elif metric == 'precision':
+        return 0
+    elif metric == 'recall':
+        return 0
+    elif metric == 'specificity':
+        return 0
+    else:
+        return None
 
 
 
