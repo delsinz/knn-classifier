@@ -4,8 +4,11 @@ import csv
 from collections import Counter, defaultdict
 
 
-"""Make sure to deal with both abalone = 2 and 3.""" 
+"""
+    Probably don't need a main in the final submission 
+"""
 def main():
+    # Data set which is a two tuple. 
     data_set = preprocess_data('data.data', 3)
     instance = data_set[0][2156]
     neighbors = get_neighbors(instance, data_set, 1000, 'cos')
@@ -14,7 +17,14 @@ def main():
     print(predict_class(neighbors, 'id'))
 
 
-
+""" 
+    preprocess_data in the specification takes only one argument 
+    but our preprocess_data takes two arguments, the second one
+    specifying the dataset we are going to be dealing with on
+    a particular run. 
+    Value of parameter abalone = 2 means we are dealing with
+    abalone - 2, abalone = 3 means we are dealing with abalone -3. 
+"""
 # Returns ([lists of 8 attributes], [class_label])
 def preprocess_data(filename, abalone = 2):
     # Load data
