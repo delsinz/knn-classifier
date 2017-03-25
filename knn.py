@@ -11,9 +11,9 @@ from scipy.spatial import distance
 """
 def main():
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data', 3)
+    data_set = preprocess_data('data.data', 2)
     # Choose k = 5 for the 2 case. 
-    print(evaluation(data_set, dist='cos', k = i))
+    print(evaluation(data_set, dist='euclidean', k = 65))
 
 
 
@@ -43,6 +43,7 @@ def preprocess_data(filename, abalone = 3):
                     instance.append(float(attribute))
                 except ValueError:
                     instance.append(attribute)
+
             instances.append(instance[:len(instance) - 1])
             to_be_predicted.append(instance[len(instance) - 1])
 
@@ -111,7 +112,7 @@ dist: euclidean || cos || manhattan
 k: positive int
 voting: ew || ild || id
 '''
-def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ew'):
+def evaluation(data_set, metric='precision', dist='euclidean', k=5, voting='ild'):
     score = 0
     partitioned_sets = partition_data(data_set)
     # Perform validation as many times as there are are datasets. 
