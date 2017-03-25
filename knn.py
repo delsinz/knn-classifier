@@ -83,7 +83,7 @@ def preprocess_data(filename, abalone = 2):
 
 
 
-def compare_instance(instance_0, instance_1, method = 'euclidean'):
+def compare_instance(instance_0, instance_1, method):
     instance_0 = convert_categorical_attribute(instance_0)
     instance_1 = convert_categorical_attribute(instance_1)
 
@@ -98,7 +98,7 @@ def compare_instance(instance_0, instance_1, method = 'euclidean'):
 
 
 
-def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
+def get_neighbors(instance, training_data_set, k, method):
     # Get class labels and scores
     training_instances = training_data_set[0]
     class_labels = training_data_set[1]
@@ -112,7 +112,7 @@ def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
 
 
 
-<<<<<<< HEAD
+
 '''
 data_set: 2-tuple. ([list of instances], [list of class labels])
 metric: accuracy || recall || precision || error
@@ -120,13 +120,9 @@ dist: euclidean || cos || manhattan
 k: positive int
 voting: ew || ild || id
 '''
-def evaluation(data_set, metric='accuracy', dist='euclidean', k=200, voting='ew'):
-=======
 # Not necessarily this many metrics, but what the hell. Just pick a few maybe?
-def evaluation(data_set, metric='accuracy', dist='euclidean', k=100, voting='id'):
->>>>>>> a19313f17ad52b9ca13ef3ccbe24d6d243a597c8
+def evaluation(data_set, metric='accuracy', dist='euclidean', k=100, voting='ew'):
     score = 0
-    leng = 0
     partitioned_sets = partition_data(data_set)
     for i in range(len(partitioned_sets)):
         testing = partitioned_sets[i]
