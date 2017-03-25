@@ -11,15 +11,10 @@ from random import shuffle
 def main():
     # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
-    evaluation(data_set)
-    ''''
-    instance = data_set[0][2156]
-    neighbors = get_neighbors(instance, data_set, 1000, 'cos')
-    print(predict_class(neighbors, 'ew'))
-    print(predict_class(neighbors, 'ild'))
-    print(predict_class(neighbors, 'id'))
-    print(instance)
-    print(partition_data(([1,2,2,2,3,3,4,5,5],[1])))'''
+    #print(len(data_set[0]))
+    print(evaluation(data_set))
+
+
 
 
 """
@@ -106,10 +101,55 @@ def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
     return sorted_scores[:k]
 
 
+
 # Not necessarily this many metrics, but what the hell. Just pick a few maybe?
-def evaluation(data_set, metric='accuracy'):
+def evaluation(data_set, metric='accuracy', dist='euclidean', k=100, voting='ew'):
+    score = 0
+    leng = 0
     partitioned_sets = partition_data(data_set)
-    print(partitioned_sets[0])
+    for i in range(len(partitioned_sets)):
+        testing = partitioned_sets[i]
+        training = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
+        score += single_pass_eval(training, testing, metric, dist, k, voting)
+    return score / len(partitioned_sets)
+
+
+
+# Combine two lists of data sets into one set
+def combine_data_sets(list0, list1):
+    instances = []
+    class_labels = []
+    for test_set in list0:
+        for instance in test_set[0]:
+            instances.append(instance)
+        for label in test_set[1]:
+            class_labels.append(label)
+    for test_set in list1:
+        for instance in test_set[0]:
+            instances.append(instance)
+        for label in test_set[1]:
+            class_labels.append(label)
+    return (instances, class_labels)
+
+
+
+def single_pass_eval(training_set, test_set, metric, dist, k, voting):
+    predicted_classes = []
+    for instance in test_set[0]:
+        neighbors = get_neighbors(instance, training_set, k, dist)
+        predicted_classes.append(predict_class(neighbors, voting))
+    if metric == 'accuracy':
+        return complete_accuracy(test_set, predicted_classes)
+    elif metric == 'recall':
+        return complete_recall(test_set, predicted_classes)
+    elif metric == 'precision':
+        return complete_precision(test_set, predicted_classes)
+    elif metric == 'error':
+        return complete_error(test_set, predicted_classes)
+    else:
+        return None
+
+
 
 
 
@@ -120,8 +160,11 @@ def partition_data(data_set):
     partition_size = set_size // M
     set_size_divider = set_size % M
 
+    # Break down the data set
     data_list = [data_set[0][i]+[data_set[1][i]] for i in range(set_size)]
+    # Random orderring
     shuffle(data_list)
+    # Construct new randomly ordered data set
     instances = []
     class_labels = []
     for row in data_list:
@@ -180,7 +223,7 @@ def predict_inverse_linear_dist(neighbors):
 
 def predict_inverse_dist(neighbors):
     label_votes = defaultdict(float)
-    offset = 2 # Offset > 1 so that weight for cos dis won't be negative due to the way cos dist is handled
+    offset = 0.5 # Offset > 1 so that weight for cos dis won't be negative due to the way cos dist is handled
     for neighbor in neighbors:
         weight = 1 / (neighbor[1] + offset)
         label_votes[neighbor[0]] += weight
@@ -203,7 +246,7 @@ def accuracy(test_set, predicted_classes, class_name):
     length = len(test_set)
     correct_predictions = 0
 
-    for i in length:
+    for i in range(length):
         if test_set[1][i] == class_name and test_set[1][i] == predicted_classes[i]:
             correct_predictions += 1
 
@@ -215,7 +258,6 @@ def accuracy(test_set, predicted_classes, class_name):
 
 
 def complete_accuracy(test_set, predicted_classes):
-
     classes = list(set(test_set[1]))
     sum_accuracy = 0
     for class_name in classes:
@@ -226,12 +268,11 @@ def complete_accuracy(test_set, predicted_classes):
 
 
 def precision(test_set, predicted_classes, class_name):
-
     length = len(test_set)
     true_positives = 0
     false_positives = 0
 
-    for i in length:
+    for i in range(length):
         if test_set[1][i] == class_name and predicted_classes[i] == class_name:
             true_positives += 1
         elif test_set[1][i] != class_name  and predicted_classes[i] == class_name:
@@ -258,7 +299,7 @@ def recall(test_set, predicted_classes, class_name):
     true_positives = 0
     false_negatives = 0
 
-    for i in length:
+    for i in range(length):
         if test_set[1][i] == class_name and predicted_classes[i] == class_name:
             true_positives += 1
         elif test_set[1][i] == class_name  and predicted_classes[i] != class_name:
