@@ -275,7 +275,7 @@ def cos_dist(instance_0, instance_1):
     else:
         # Give cos dist the same behavior (smaller == better) as euclidean and manhattan
         # similarity -> distance, thus the negation.
-        return -dot_prod / (mag_0 * mag_1)
+        return 1 - dot_prod / (mag_0 * mag_1)
 
 
 
