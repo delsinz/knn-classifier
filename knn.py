@@ -122,7 +122,6 @@ voting: ew || ild || id
 '''
 def evaluation(data_set, metric='accuracy', dist='euclidean', k=150, voting='ild'):
     score = 0
-    leng = 0
     partitioned_sets = partition_data(data_set)
     for i in range(len(partitioned_sets)):
         testing = partitioned_sets[i]
