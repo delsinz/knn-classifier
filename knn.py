@@ -11,7 +11,7 @@ from scipy.spatial import distance
 """
 def main():
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data', 22)
+    data_set = preprocess_data('data.data', 2)
 
     primes = prime_finder()
 
@@ -376,7 +376,7 @@ def accuracy(test_set, predicted_classes, class_name):
         elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
             correct_predictions += 1
 
-    print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length))
+    # print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length))
     return correct_predictions/length*100
 
 
