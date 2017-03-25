@@ -155,6 +155,9 @@ def single_pass_eval(training_set, test_set, metric, dist, k, voting):
     for instance in test_set[0]:
         neighbors = get_neighbors(instance, training_set, k, dist)
         predicted_classes.append(predict_class(neighbors, voting))
+    #for i in range(len(predicted_classes)):
+        #print(predicted_classes[i], test_set[1][i])
+    #(test_set[1])
     if metric == 'accuracy':
         return complete_accuracy(test_set, predicted_classes)
     elif metric == 'recall':
@@ -283,8 +286,10 @@ def precision(test_set, predicted_classes, class_name):
             true_positives += 1
         elif test_set[1][i] != class_name  and predicted_classes[i] == class_name:
             false_positives += 1
-
-    return 0 if true_positives == 0 else true_positives/(true_positives + false_positives)
+    if true_positives + false_positives == 0:
+        return 1
+    else:
+        return true_positives/(true_positives + false_positives)
 
 
 
@@ -312,7 +317,10 @@ def recall(test_set, predicted_classes, class_name):
         elif test_set[1][i] == class_name  and predicted_classes[i] != class_name:
             false_negatives += 1
 
-    return 0 if true_positives == 0 else true_positives/(true_positives + false_negatives)
+    if true_positives + false_negatives == 0:
+        return 1
+    else:
+        return true_positives / (true_positives + false_negatives)
 
 
 
