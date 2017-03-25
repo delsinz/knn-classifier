@@ -185,6 +185,8 @@ def accuracy(test_set, predicted_classes, class_name):
            
     return correct_predictions/length*100
 
+
+
 def complete_accuracy(test_set, predicted_classes):
     
     classes = list(set(test_set[1]))
@@ -194,7 +196,8 @@ def complete_accuracy(test_set, predicted_classes):
 
     return sum_accuracy/3
 
-        
+
+
 def precision(test_set, predicted_classes, class_name):
     
     length = len(test_set)
@@ -208,7 +211,9 @@ def precision(test_set, predicted_classes, class_name):
             false_positives += 1
     
     return true_positives/(true_positives + false_positives)
-            
+
+
+ 
 def complete_precision(test_set, predicted_classes):
     
     classes = list(set(test_set[1]))
@@ -217,6 +222,8 @@ def complete_precision(test_set, predicted_classes):
         sum_precision += precision(test_set, predicted_classes, class_name)
     
     return sum_precision/3
+
+
 
 def recall(test_set, predicted_classes, class_name):
 
@@ -232,6 +239,8 @@ def recall(test_set, predicted_classes, class_name):
     
     return true_positives/(true_positives + false_negatives)
 
+
+
 def total_recall(test_set, predicted_classes):
 
     classes = list(set(test_set[1]))
@@ -242,7 +251,13 @@ def total_recall(test_set, predicted_classes):
     return sum_recall/3
     
 
-     
+
+def complete_error(test_set, predicted_classes):
+
+    error = 100 - complete_accuracy(test_set, predicted_classes)
+
+    return error
+
 
 def cos_dist(instance_0, instance_1):
     mag_0 = 0
@@ -275,7 +290,7 @@ def manhattan_dist(instance_0, instance_1):
 # Break categorical attribute Sex into 3 binary attributes: M, F, I
 def convert_categorical_attribute(instance):
     # Assuming the attributes are provided in the given order
-    val = instance[0];
+    val = instance[0]
     if val == 'M':
         return [1, 0, 0] + instance[1:]
     elif val == 'F':
