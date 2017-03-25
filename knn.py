@@ -3,6 +3,7 @@
 import csv
 from collections import Counter, defaultdict
 from random import shuffle
+from scipy.spatial import distance
 
 
 """
@@ -11,7 +12,9 @@ from random import shuffle
 def main():
     # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
-    evaluation(data_set)
+    test_manhattan(data_set)
+    return None 
+    #evaluation(data_set)
     ''''
     instance = data_set[0][2156]
     neighbors = get_neighbors(instance, data_set, 1000, 'cos')
@@ -187,17 +190,6 @@ def predict_inverse_dist(neighbors):
     return max(label_votes, key=label_votes.get)
 
 
-
-def euclidean_dist(instance_0, instance_1):
-    # Assuming both instances have the same num of attributes
-    length = len(instance_0)
-    square_sum = 0
-    for i in range(length):
-        square_sum += (instance_0[i] - instance_1[i]) ** 2
-    return square_sum ** 0.5
-
-
-
 def accuracy(test_set, predicted_classes, class_name):
 
     length = len(test_set)
@@ -286,6 +278,44 @@ def complete_error(test_set, predicted_classes):
     return error
 
 
+# Break categorical attribute Sex into 3 binary attributes: M, F, I
+def convert_categorical_attribute(instance):
+    # Assuming the attributes are provided in the given order
+    val = instance[0]
+    if val == 'M':
+        return [1, 0, 0] + instance[1:]
+    elif val == 'F':
+        return [0, 1, 0] + instance[1:]
+    elif val == 'I':
+        return [0, 0, 1] + instance[1:]
+    else:
+        return [0, 0, 0] + instance[1:]
+
+
+# Tested.
+def euclidean_dist(instance_0, instance_1):
+    # Assuming both instances have the same num of attributes
+    length = len(instance_0)
+    square_sum = 0
+    for i in range(length):
+        square_sum += (instance_0[i] - instance_1[i]) ** 2
+    return square_sum ** 0.5
+
+def test_euclidean(data_set):
+    count = 0
+    # Test for euclidean correctness. 
+    for row1 in data_set[0]:
+        row1 = convert_categorical_attribute(row1)
+        print(count)
+        count += 1
+        for row2 in data_set[0]:
+            row2 = convert_categorical_attribute(row2)
+            if(euclidean_dist(row1, row2) - distance.euclidean(row1, row2) >= 0.001):
+                print("Euclidean Distance is wrong\n")
+        #our_dist = euclidean_dist(row1, row2)
+        #correct_dist = numpy.linalg.norm(numpy.asarray(row1) - numpy.asarray(row2))
+
+# Tested.
 def cos_dist(instance_0, instance_1):
     mag_0 = 0
     mag_1 = 0
@@ -305,27 +335,36 @@ def cos_dist(instance_0, instance_1):
         return 1 - dot_prod / (mag_0 * mag_1)
 
 
+def test_cosine(data_set):
+    count = 0
+    # Test for cosine distance correctness. 
+    for row1 in data_set[0]:
+        row1 = convert_categorical_attribute(row1)
+        print(count)
+        count += 1
+        for row2 in data_set[0]:
+            row2 = convert_categorical_attribute(row2)
+            if(cos_dist(row1, row2) - (distance.cosine(row1, row2)) >= 0.001):
+                print("Cosine Distance is wrong\n")
 
+# Tested.
 def manhattan_dist(instance_0, instance_1):
     total = 0
     for i in range(len(instance_0)):
         total += abs(instance_0[i] - instance_1[i])
     return total
 
-
-
-# Break categorical attribute Sex into 3 binary attributes: M, F, I
-def convert_categorical_attribute(instance):
-    # Assuming the attributes are provided in the given order
-    val = instance[0]
-    if val == 'M':
-        return [1, 0, 0] + instance[1:]
-    elif val == 'F':
-        return [0, 1, 0] + instance[1:]
-    elif val == 'I':
-        return [0, 0, 1] + instance[1:]
-    else:
-        return [0, 0, 0] + instance[1:]
+def test_manhattan(data_set):
+    count = 0
+    # Test for manhattan correctness. 
+    for row1 in data_set[0]:
+        row1 = convert_categorical_attribute(row1)
+        print(count)
+        count += 1
+        for row2 in data_set[0]:
+            row2 = convert_categorical_attribute(row2)
+            if(manhattan_dist(row1, row2) - (distance.cityblock(row1, row2)) >= 0.001):
+                print("Manhattan Distance is wrong\n")
 
 
 if __name__ == '__main__':
