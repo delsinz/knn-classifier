@@ -1,14 +1,14 @@
-""" Remember to add our names, student IDs here """ 
+""" Remember to add our names, student IDs here """
 
 import csv
 from collections import Counter, defaultdict
 
 
 """
-    Probably don't need a main in the final submission 
+    Probably don't need a main in the final submission
 """
 def main():
-    # Data set which is a two tuple. 
+    # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
     instance = data_set[0][2156]
     neighbors = get_neighbors(instance, data_set, 1000, 'cos')
@@ -28,44 +28,44 @@ def main():
 # Returns ([lists of 8 attributes], [class_label])
 def preprocess_data(filename, abalone = 2):
     # Load data
-    file = open(filename)
-    reader = csv.reader(file)
+    with open(filename) as file:
+        reader = csv.reader(file)
 
-    # Construct instance list
-    instances = []
-    to_be_predicted = []
-    for row in reader:
-        instance = []
-        for attribute in row:
-            try:
-                instance.append(float(attribute))
-            except ValueError:
-                instance.append(attribute)
-        instances.append(instance[:len(instance) - 1])
-        to_be_predicted.append(instance[len(instance) - 1])
+        # Construct instance list
+        instances = []
+        to_be_predicted = []
+        for row in reader:
+            instance = []
+            for attribute in row:
+                try:
+                    instance.append(float(attribute))
+                except ValueError:
+                    instance.append(attribute)
+            instances.append(instance[:len(instance) - 1])
+            to_be_predicted.append(instance[len(instance) - 1])
 
-    # Construct class labels
-    class_labels = []
-    if abalone == 3:
-        for rings in to_be_predicted:
-            label = ''
-            if rings <= 8:
-                label = 'very-young'
-            elif rings <= 10:
-                label = 'middle-age'
-            else:
-                label = 'old'
-            class_labels.append(label)
-    elif abalone == 2:
-        for rings in to_be_predicted:
-            label = ''
-            if rings <= 10:
-                label = 'young'
-            else:
-                label = 'old'
-            class_labels.append(label)
-    else:
-        return None
+        # Construct class labels
+        class_labels = []
+        if abalone == 3:
+            for rings in to_be_predicted:
+                label = ''
+                if rings <= 8:
+                    label = 'very-young'
+                elif rings <= 10:
+                    label = 'middle-age'
+                else:
+                    label = 'old'
+                class_labels.append(label)
+        elif abalone == 2:
+            for rings in to_be_predicted:
+                label = ''
+                if rings <= 10:
+                    label = 'young'
+                else:
+                    label = 'old'
+                class_labels.append(label)
+        else:
+            return None
 
     # Construct data set
     data_set = (instances, class_labels)
@@ -129,7 +129,6 @@ def predict_class(neighbors, method = 'ew'):
         return None
 
 
-
 def predict_equal_weight(neighbors):
     labels = [neighbor[0] for neighbor in neighbors]
     label_votes = dict(Counter(labels))
@@ -172,6 +171,23 @@ def euclidean_dist(instance_0, instance_1):
 
 
 
+def accuracy(test_set, predicted_classes, class_name):
+
+    length = len(test_set)
+    correct_predictions = 0
+    for i in length:
+        if test_set[1][i] == class_name and test_set[1][i] == predicted_classes[i]:
+            correct_predictions += 1
+        elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
+            correct_predictions += 1
+  
+    return correct_predictions/length
+
+def complete_accuracy(test_set, predict_classes, abalone = 2):
+    
+
+        
+
 def cos_dist(instance_0, instance_1):
     mag_0 = 0
     mag_1 = 0
@@ -182,7 +198,8 @@ def cos_dist(instance_0, instance_1):
         dot_prod += instance_0[i] * instance_1[i]
     mag_0 = mag_0 ** 0.5
     mag_1 = mag_1 ** 0.5
-    if(mag_0 * mag_1 == 0): # Orthogonal
+    #I feel like this should be dot_prod = 0
+    if dot_prod == 0: #Orthogonal
         return 0
     else:
         # Give cos dist the same behavior (smaller == better) as euclidean and manhattan
@@ -215,4 +232,4 @@ def convert_categorical_attribute(instance):
 
 
 if __name__ == '__main__':
-    main();
+    main()
