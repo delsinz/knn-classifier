@@ -243,7 +243,7 @@ def complete_accuracy(test_set, predicted_classes):
     for class_name in classes:
         sum_accuracy += accuracy(test_set, predicted_classes, class_name)
 
-    return sum_accuracy/3
+    return sum_accuracy/len(classes)
 
 
 
@@ -270,7 +270,7 @@ def complete_precision(test_set, predicted_classes):
     for class_name in classes:
         sum_precision += precision(test_set, predicted_classes, class_name)
     
-    return sum_precision/3
+    return sum_precision/len(classes)
 
 
 
@@ -290,14 +290,14 @@ def recall(test_set, predicted_classes, class_name):
 
 
 
-def total_recall(test_set, predicted_classes):
+def complete_recall(test_set, predicted_classes):
 
     classes = list(set(test_set[1]))
     sum_recall = 0 
     for class_name in classes:
         sum_recall += recall(test_set, predicted_classes, class_name)
 
-    return sum_recall/3
+    return sum_recall/len(classes)
     
 
 
