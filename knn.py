@@ -84,7 +84,7 @@ def preprocess_data(filename, abalone = 2):
 
 
 
-def compare_instance(instance_0, instance_1, method = 'euclidean'):
+def compare_instance(instance_0, instance_1, method):
     instance_0 = convert_categorical_attribute(instance_0)
     instance_1 = convert_categorical_attribute(instance_1)
 
@@ -99,7 +99,7 @@ def compare_instance(instance_0, instance_1, method = 'euclidean'):
 
 
 
-def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
+def get_neighbors(instance, training_data_set, k, method):
     # Get class labels and scores
     training_instances = training_data_set[0]
     class_labels = training_data_set[1]
@@ -113,8 +113,14 @@ def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
 
 
 
-# Not necessarily this many metrics, but what the hell. Just pick a few maybe?
-def evaluation(data_set, metric='accuracy', dist='euclidean', k=100, voting='ew'):
+'''
+data_set: 2-tuple. ([list of instances], [list of class labels])
+metric: accuracy || recall || precision || error
+dist: euclidean || cos || manhattan
+k: positive int
+voting: ew || ild || id
+'''
+def evaluation(data_set, metric='accuracy', dist='euclidean', k=150, voting='ild'):
     score = 0
     leng = 0
     partitioned_sets = partition_data(data_set)
@@ -199,12 +205,12 @@ def partition_data(data_set):
 
 
 
-def predict_class(neighbors, method = 'ew'):
-    if method == 'ew':
+def predict_class(neighbors, method):
+    if method == 'ew': # Equal weight
         return predict_equal_weight(neighbors)
-    elif method == 'ild':
+    elif method == 'ild': # Inverse linear distance
         return predict_inverse_linear_dist(neighbors)
-    elif method == 'id':
+    elif method == 'id': # Inverse distance
         return predict_inverse_dist(neighbors)
     else:
         return None
@@ -352,7 +358,7 @@ def euclidean_dist(instance_0, instance_1):
 
 def test_euclidean(data_set):
     count = 0
-    # Test for euclidean correctness. 
+    # Test for euclidean correctness.
     for row1 in data_set[0]:
         row1 = convert_categorical_attribute(row1)
         print(count)
@@ -386,7 +392,7 @@ def cos_dist(instance_0, instance_1):
 
 def test_cosine(data_set):
     count = 0
-    # Test for cosine distance correctness. 
+    # Test for cosine distance correctness.
     for row1 in data_set[0]:
         row1 = convert_categorical_attribute(row1)
         print(count)
@@ -405,7 +411,7 @@ def manhattan_dist(instance_0, instance_1):
 
 def test_manhattan(data_set):
     count = 0
-    # Test for manhattan correctness. 
+    # Test for manhattan correctness.
     for row1 in data_set[0]:
         row1 = convert_categorical_attribute(row1)
         print(count)
