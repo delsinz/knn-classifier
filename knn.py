@@ -11,7 +11,7 @@ from random import shuffle
 def main():
     # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
-    partition_data(data_set)
+    evaluation(data_set)
     ''''
     instance = data_set[0][2156]
     neighbors = get_neighbors(instance, data_set, 1000, 'cos')
@@ -22,13 +22,13 @@ def main():
     print(partition_data(([1,2,2,2,3,3,4,5,5],[1])))'''
 
 
-""" 
-    preprocess_data in the specification takes only one argument 
+"""
+    preprocess_data in the specification takes only one argument
     but our preprocess_data takes two arguments, the second one
     specifying the dataset we are going to be dealing with on
-    a particular run. 
+    a particular run.
     Value of parameter abalone = 2 means we are dealing with
-    abalone - 2, abalone = 3 means we are dealing with abalone -3. 
+    abalone - 2, abalone = 3 means we are dealing with abalone -3.
 """
 # Returns ([lists of 8 attributes], [class_label])
 def preprocess_data(filename, abalone = 2):
@@ -108,18 +108,9 @@ def get_neighbors(instance, training_data_set, k, method = 'euclidean'):
 
 # Not necessarily this many metrics, but what the hell. Just pick a few maybe?
 def evaluation(data_set, metric='accuracy'):
-    if metric == 'accuracy':
-        return 0
-    elif metric == 'error': # Error rate
-        return 0
-    elif metric == 'precision':
-        return 0
-    elif metric == 'recall':
-        return 0
-    elif metric == 'specificity':
-        return 0
-    else:
-        return None
+    partitioned_sets = partition_data(data_set)
+    print(partitioned_sets[0])
+
 
 
 def partition_data(data_set):
@@ -129,38 +120,25 @@ def partition_data(data_set):
     partition_size = set_size // M
     set_size_divider = set_size % M
 
-    '''# List of random indices
-    random_index = list(range(set_size))
-    shuffle(random_index)'''
-
-    data_list = [list(instance) for instance in zip(data_set[0], data_set[1])]
+    data_list = [data_set[0][i]+[data_set[1][i]] for i in range(set_size)]
     shuffle(data_list)
     instances = []
     class_labels = []
     for row in data_list:
-
         instances.append(row[:len(row) - 1])
         class_labels.append(row[len(row)- 1])
-
     data_set = (instances, class_labels)
-
 
     start = 0
     for i in range(10):
         if i < set_size_divider:
-
             partitioned_sets.append((data_set[0][start:(start + partition_size + 1)],
             data_set[1][start:(start + partition_size + 1)]))
             start += partition_size + 1
         else:
-
             partitioned_sets.append((data_set[0][start:(start + partition_size)],
             data_set[1][start:(start + partition_size)]))
             start += partition_size
-
-    '''for (me, you) in partitioned_sets:
-        print((me, you))
-        print("\n")'''
 
     return partitioned_sets
 
@@ -228,16 +206,16 @@ def accuracy(test_set, predicted_classes, class_name):
     for i in length:
         if test_set[1][i] == class_name and test_set[1][i] == predicted_classes[i]:
             correct_predictions += 1
-        
+
         elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
             correct_predictions += 1
-           
+
     return correct_predictions/length*100
 
 
 
 def complete_accuracy(test_set, predicted_classes):
-    
+
     classes = list(set(test_set[1]))
     sum_accuracy = 0
     for class_name in classes:
@@ -248,7 +226,7 @@ def complete_accuracy(test_set, predicted_classes):
 
 
 def precision(test_set, predicted_classes, class_name):
-    
+
     length = len(test_set)
     true_positives = 0
     false_positives = 0
@@ -258,18 +236,18 @@ def precision(test_set, predicted_classes, class_name):
             true_positives += 1
         elif test_set[1][i] != class_name  and predicted_classes[i] == class_name:
             false_positives += 1
-    
+
     return true_positives/(true_positives + false_positives)
 
 
- 
+
 def complete_precision(test_set, predicted_classes):
-    
+
     classes = list(set(test_set[1]))
     sum_precision = 0
     for class_name in classes:
         sum_precision += precision(test_set, predicted_classes, class_name)
-    
+
     return sum_precision/len(classes)
 
 
@@ -285,7 +263,7 @@ def recall(test_set, predicted_classes, class_name):
             true_positives += 1
         elif test_set[1][i] == class_name  and predicted_classes[i] != class_name:
             false_negatives += 1
-    
+
     return true_positives/(true_positives + false_negatives)
 
 
@@ -293,12 +271,12 @@ def recall(test_set, predicted_classes, class_name):
 def complete_recall(test_set, predicted_classes):
 
     classes = list(set(test_set[1]))
-    sum_recall = 0 
+    sum_recall = 0
     for class_name in classes:
         sum_recall += recall(test_set, predicted_classes, class_name)
 
     return sum_recall/len(classes)
-    
+
 
 
 def complete_error(test_set, predicted_classes):
