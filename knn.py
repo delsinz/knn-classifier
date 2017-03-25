@@ -11,7 +11,7 @@ from scipy.spatial import distance
 """
 def main():
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data', 3)
+    data_set = preprocess_data('data.data')
 
     ''''
     instance = data_set[0][2156]
@@ -21,9 +21,9 @@ def main():
     print(predict_class(neighbors, 'id'))
     print(instance)
     print(partition_data(([1,2,2,2,3,3,4,5,5],[1])))'''
-    #print(len(data_set[0]))
+    # print(len(data_set[0]))
 
-    print(evaluation(data_set, metric='precision'))
+    print(evaluation(data_set, dist='cos', k = 5))
 
 
 """
@@ -36,7 +36,7 @@ def main():
 """
 # Tested.
 # Returns ([lists of 8 attributes], [class_label])
-def preprocess_data(filename, abalone = 2):
+def preprocess_data(filename, abalone = 3):
     # Load data
     with open(filename) as file:
         reader = csv.reader(file)
@@ -44,6 +44,7 @@ def preprocess_data(filename, abalone = 2):
         # Construct instance list
         instances = []
         to_be_predicted = []
+
         for row in reader:
             instance = []
             for attribute in row:
@@ -77,13 +78,14 @@ def preprocess_data(filename, abalone = 2):
         else:
             return None
 
-    # Construct data set
+    # Construct data set as a tuple of instances 
     data_set = (instances, class_labels)
+
     return data_set
 
 
-
 def compare_instance(instance_0, instance_1, method):
+
     instance_0 = convert_categorical_attribute(instance_0)
     instance_1 = convert_categorical_attribute(instance_1)
 
@@ -106,12 +108,10 @@ def get_neighbors(instance, training_data_set, k, method):
     scores = []
     for i in range(size):
         scores.append((class_labels[i], compare_instance(instance, training_instances[i], method)))
+
     # Sort result
-    sorted_scores = sorted_scores = sorted(scores, key=lambda x:x[1])
+    sorted_scores = sorted(scores, key=lambda x:x[1])
     return sorted_scores[:k]
-
-
-
 
 '''
 data_set: 2-tuple. ([list of instances], [list of class labels])
@@ -120,41 +120,43 @@ dist: euclidean || cos || manhattan
 k: positive int
 voting: ew || ild || id
 '''
-# Not necessarily this many metrics, but what the hell. Just pick a few maybe?
-def evaluation(data_set, metric='accuracy', dist='euclidean', k=100, voting='ew'):
+def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ew'):
     score = 0
     partitioned_sets = partition_data(data_set)
+    # Perform validation as many times as there are are datasets. 
     for i in range(len(partitioned_sets)):
-        testing = partitioned_sets[i]
-        training = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
-        score += single_pass_eval(training, testing, metric, dist, k, voting)
+        test_data_set = partitioned_sets[i]
+        training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
+        # print("Length of the training set is:" + str(len(training_data_set[0])))
+        score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
     return score / len(partitioned_sets)
 
 
-
 # Combine two lists of data sets into one set
-def combine_data_sets(list0, list1):
+def combine_data_sets(training_subsets0, training_subsets1):
     instances = []
     class_labels = []
-    for test_set in list0:
-        for instance in test_set[0]:
+    for subset in training_subsets0:
+        for instance in subset[0]:
             instances.append(instance)
-        for label in test_set[1]:
+        for label in subset[1]:
             class_labels.append(label)
-    for test_set in list1:
-        for instance in test_set[0]:
+    for subset in training_subsets1:
+        for instance in subset[0]:
             instances.append(instance)
-        for label in test_set[1]:
+        for label in subset[1]:
             class_labels.append(label)
     return (instances, class_labels)
-
 
 
 def single_pass_eval(training_set, test_set, metric, dist, k, voting):
     predicted_classes = []
     for instance in test_set[0]:
         neighbors = get_neighbors(instance, training_set, k, dist)
-        predicted_classes.append(predict_class(neighbors, voting))
+        # print("My neighbors: " + str(neighbors))
+        predicted_class = predict_class(neighbors, voting)
+        # print("My predicted class: "  + str(predicted_class))
+        predicted_classes.append(predicted_class)
     if metric == 'accuracy':
         return complete_accuracy(test_set, predicted_classes)
     elif metric == 'recall':
@@ -167,37 +169,52 @@ def single_pass_eval(training_set, test_set, metric, dist, k, voting):
         return None
 
 
-
-
-
+# Checked but not tested.
 def partition_data(data_set):
+
     partitioned_sets = []
     M = 10
     set_size = len(data_set[0])
+    # All partitions must be of this size. 
     partition_size = set_size // M
+    
+    '''
+       These instances are the remainder after making all the partitions of the 
+       same size and one element will be added to partitions (starting from the first) until
+       we are out of the residual instances.
+       So set size divider is the number of partitions (0th partition to (set_size_divider - 1)th partion)
+       which will have one element more. 
+    '''
     set_size_divider = set_size % M
 
     # Break down the data set
     data_list = [data_set[0][i]+[data_set[1][i]] for i in range(set_size)]
-    # Random orderring
+
+    # Random orderring, for fair partitioning
     shuffle(data_list)
     # Construct new randomly ordered data set
+
     instances = []
     class_labels = []
     for row in data_list:
         instances.append(row[:len(row) - 1])
         class_labels.append(row[len(row)- 1])
-    data_set = (instances, class_labels)
+    
+    # The shuffled data set. 
+    shuffled_data_set = (instances, class_labels)
 
     start = 0
+
+    # 10 fold cross validation. 
+    # Each elements of partitioned_sets will be used as test instance once. 
     for i in range(10):
         if i < set_size_divider:
-            partitioned_sets.append((data_set[0][start:(start + partition_size + 1)],
-            data_set[1][start:(start + partition_size + 1)]))
+            partitioned_sets.append((shuffled_data_set[0][start:(start + partition_size + 1)],
+            shuffled_data_set[1][start:(start + partition_size + 1)]))
             start += partition_size + 1
         else:
-            partitioned_sets.append((data_set[0][start:(start + partition_size)],
-            data_set[1][start:(start + partition_size)]))
+            partitioned_sets.append((shuffled_data_set[0][start:(start + partition_size)],
+            shuffled_data_set[1][start:(start + partition_size)]))
             start += partition_size
 
     return partitioned_sets
@@ -249,7 +266,7 @@ def predict_inverse_dist(neighbors):
 
 def accuracy(test_set, predicted_classes, class_name):
 
-    length = len(test_set)
+    length = len(test_set[0])
     correct_predictions = 0
 
     for i in range(length):
@@ -259,6 +276,7 @@ def accuracy(test_set, predicted_classes, class_name):
         elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
             correct_predictions += 1
 
+    print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length))
     return correct_predictions/length*100
 
 
@@ -274,7 +292,7 @@ def complete_accuracy(test_set, predicted_classes):
 
 
 def precision(test_set, predicted_classes, class_name):
-    length = len(test_set)
+    length = len(test_set[0])
     true_positives = 0
     false_positives = 0
 
@@ -302,7 +320,7 @@ def complete_precision(test_set, predicted_classes):
 
 def recall(test_set, predicted_classes, class_name):
 
-    length = len(test_set)
+    length = len(test_set[0])
     true_positives = 0
     false_negatives = 0
 
@@ -322,7 +340,7 @@ def complete_recall(test_set, predicted_classes):
     sum_recall = 0
     for class_name in classes:
         sum_recall += recall(test_set, predicted_classes, class_name)
-
+        
     return sum_recall/len(classes)
 
 
