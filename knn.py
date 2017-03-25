@@ -11,7 +11,9 @@ from scipy.spatial import distance
 """
 def main():
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data', 2)
+    data_set = preprocess_data('data.data', 3)
+    
+
     # Choose k = 5 for the 2 case. 
     print(evaluation(data_set, dist='euclidean', k = 65))
 
@@ -29,6 +31,8 @@ def main():
 # Returns ([lists of 8 attributes], [class_label])
 def preprocess_data(filename, abalone = 3):
     # Load data
+    total_numerical = 0
+    count_numerical = 0
     with open(filename) as file:
         reader = csv.reader(file)
 
@@ -41,9 +45,12 @@ def preprocess_data(filename, abalone = 3):
             for attribute in row:
                 try:
                     instance.append(float(attribute))
+                    total_numerical += float(attribute)
+                    count_numerical += 1
                 except ValueError:
                     instance.append(attribute)
-
+            total_numerical -= instance[len(instance) - 1]
+            count_numerical -= 1
             instances.append(instance[:len(instance) - 1])
             to_be_predicted.append(instance[len(instance) - 1])
 
@@ -71,15 +78,34 @@ def preprocess_data(filename, abalone = 3):
             return None
 
     # Construct data set as a tuple of instances 
-    data_set = (instances, class_labels)
+    mean_numerical_value = total_numerical/count_numerical
+    
+    processed_instances = []
+    for instance in instances:
+        processed_instance = convert_categorical_attribute(instance, mean_numerical_value)
+        processed_instances.append(processed_instance)
+    
+    data_set = (processed_instances, class_labels)
 
     return data_set
 
+# Break categorical attribute Sex into 3 binary attributes: M, F, I
+def convert_categorical_attribute(instance, mean_numerical_value):
+    # Assuming the attributes are provided in the given order
+    val = instance[0]
+    if val == 'M':
+        return [mean_numerical_value, 0, 0] + instance[1:]
+    elif val == 'F':
+        return [0, mean_numerical_value, 0] + instance[1:]
+    elif val == 'I':
+        return [0, 0, mean_numerical_value] + instance[1:]
+    else:
+        return [0, 0, 0] + instance[1:]
+
+
+
 
 def compare_instance(instance_0, instance_1, method):
-
-    instance_0 = convert_categorical_attribute(instance_0)
-    instance_1 = convert_categorical_attribute(instance_1)
 
     if method == 'euclidean':
         return euclidean_dist(instance_0, instance_1)
@@ -90,6 +116,79 @@ def compare_instance(instance_0, instance_1, method):
     else:
         return None
 
+# Tested.
+def euclidean_dist(instance_0, instance_1):
+    # Assuming both instances have the same num of attributes
+    length = len(instance_0)
+    square_sum = 0
+    for i in range(length):
+        square_sum += (instance_0[i] - instance_1[i]) ** 2
+    return square_sum ** 0.5
+
+def test_euclidean(data_set):
+    count = 0
+    # Test for euclidean correctness.
+    for row1 in data_set[0]:
+        row1 = convert_categorical_attribute(row1)
+        print(count)
+        count += 1
+        for row2 in data_set[0]:
+            row2 = convert_categorical_attribute(row2)
+            if(euclidean_dist(row1, row2) - distance.euclidean(row1, row2) >= 0.001):
+                print("Euclidean Distance is wrong\n")
+        #our_dist = euclidean_dist(row1, row2)
+        #correct_dist = numpy.linalg.norm(numpy.asarray(row1) - numpy.asarray(row2))
+
+# Tested.
+def cos_dist(instance_0, instance_1):
+    mag_0 = 0
+    mag_1 = 0
+    dot_prod = 0
+    for i in range(len(instance_0)):
+        mag_0 += instance_0[i] ** 2
+        mag_1 += instance_1[i] ** 2
+        dot_prod += instance_0[i] * instance_1[i]
+    mag_0 = mag_0 ** 0.5
+    mag_1 = mag_1 ** 0.5
+    #I feel like this should be dot_prod = 0
+    if dot_prod == 0: #Orthogonal
+        return 0
+    else:
+        # Give cos dist the same behavior (smaller == better) as euclidean and manhattan
+        # similarity -> distance, thus the negation.
+        return 1 - dot_prod / (mag_0 * mag_1)
+
+
+def test_cosine(data_set):
+    count = 0
+    # Test for cosine distance correctness.
+    for row1 in data_set[0]:
+        row1 = convert_categorical_attribute(row1)
+        print(count)
+        count += 1
+        for row2 in data_set[0]:
+            row2 = convert_categorical_attribute(row2)
+            if(cos_dist(row1, row2) - (distance.cosine(row1, row2)) >= 0.001):
+                print("Cosine Distance is wrong\n")
+
+# Tested.
+def manhattan_dist(instance_0, instance_1):
+    total = 0
+    for i in range(len(instance_0)):
+        total += abs(instance_0[i] - instance_1[i])
+    return total
+
+def test_manhattan(data_set):
+    count = 0
+    # Test for manhattan correctness.
+    for row1 in data_set[0]:
+        row1 = convert_categorical_attribute(row1)
+        print(count)
+        count += 1
+        for row2 in data_set[0]:
+            row2 = convert_categorical_attribute(row2)
+            if(manhattan_dist(row1, row2) - (distance.cityblock(row1, row2)) >= 0.001):
+                print("Manhattan Distance is wrong\n")
 
 
 def get_neighbors(instance, training_data_set, k, method):
@@ -112,7 +211,7 @@ dist: euclidean || cos || manhattan
 k: positive int
 voting: ew || ild || id
 '''
-def evaluation(data_set, metric='precision', dist='euclidean', k=5, voting='ild'):
+def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild'):
     score = 0
     partitioned_sets = partition_data(data_set)
     # Perform validation as many times as there are are datasets. 
@@ -300,9 +399,6 @@ def precision(test_set, predicted_classes, class_name):
     else:
         return true_positives/(true_positives + false_positives)
 
-
-
-
 def complete_precision(test_set, predicted_classes):
 
     classes = list(set(test_set[1]))
@@ -311,8 +407,6 @@ def complete_precision(test_set, predicted_classes):
         sum_precision += precision(test_set, predicted_classes, class_name)
 
     return sum_precision/len(classes)
-
-
 
 def recall(test_set, predicted_classes, class_name):
 
@@ -350,94 +444,6 @@ def complete_error(test_set, predicted_classes):
 
     return error
 
-
-# Break categorical attribute Sex into 3 binary attributes: M, F, I
-def convert_categorical_attribute(instance):
-    # Assuming the attributes are provided in the given order
-    val = instance[0]
-    if val == 'M':
-        return [1, 0, 0] + instance[1:]
-    elif val == 'F':
-        return [0, 1, 0] + instance[1:]
-    elif val == 'I':
-        return [0, 0, 1] + instance[1:]
-    else:
-        return [0, 0, 0] + instance[1:]
-
-
-# Tested.
-def euclidean_dist(instance_0, instance_1):
-    # Assuming both instances have the same num of attributes
-    length = len(instance_0)
-    square_sum = 0
-    for i in range(length):
-        square_sum += (instance_0[i] - instance_1[i]) ** 2
-    return square_sum ** 0.5
-
-def test_euclidean(data_set):
-    count = 0
-    # Test for euclidean correctness.
-    for row1 in data_set[0]:
-        row1 = convert_categorical_attribute(row1)
-        print(count)
-        count += 1
-        for row2 in data_set[0]:
-            row2 = convert_categorical_attribute(row2)
-            if(euclidean_dist(row1, row2) - distance.euclidean(row1, row2) >= 0.001):
-                print("Euclidean Distance is wrong\n")
-        #our_dist = euclidean_dist(row1, row2)
-        #correct_dist = numpy.linalg.norm(numpy.asarray(row1) - numpy.asarray(row2))
-
-# Tested.
-def cos_dist(instance_0, instance_1):
-    mag_0 = 0
-    mag_1 = 0
-    dot_prod = 0
-    for i in range(len(instance_0)):
-        mag_0 += instance_0[i] ** 2
-        mag_1 += instance_1[i] ** 2
-        dot_prod += instance_0[i] * instance_1[i]
-    mag_0 = mag_0 ** 0.5
-    mag_1 = mag_1 ** 0.5
-    #I feel like this should be dot_prod = 0
-    if dot_prod == 0: #Orthogonal
-        return 0
-    else:
-        # Give cos dist the same behavior (smaller == better) as euclidean and manhattan
-        # similarity -> distance, thus the negation.
-        return 1 - dot_prod / (mag_0 * mag_1)
-
-
-def test_cosine(data_set):
-    count = 0
-    # Test for cosine distance correctness.
-    for row1 in data_set[0]:
-        row1 = convert_categorical_attribute(row1)
-        print(count)
-        count += 1
-        for row2 in data_set[0]:
-            row2 = convert_categorical_attribute(row2)
-            if(cos_dist(row1, row2) - (distance.cosine(row1, row2)) >= 0.001):
-                print("Cosine Distance is wrong\n")
-
-# Tested.
-def manhattan_dist(instance_0, instance_1):
-    total = 0
-    for i in range(len(instance_0)):
-        total += abs(instance_0[i] - instance_1[i])
-    return total
-
-def test_manhattan(data_set):
-    count = 0
-    # Test for manhattan correctness.
-    for row1 in data_set[0]:
-        row1 = convert_categorical_attribute(row1)
-        print(count)
-        count += 1
-        for row2 in data_set[0]:
-            row2 = convert_categorical_attribute(row2)
-            if(manhattan_dist(row1, row2) - (distance.cityblock(row1, row2)) >= 0.001):
-                print("Manhattan Distance is wrong\n")
 
 
 if __name__ == '__main__':
