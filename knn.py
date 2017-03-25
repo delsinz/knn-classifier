@@ -11,7 +11,7 @@ from scipy.spatial import distance
 """
 def main():
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data', 3)
+    data_set = preprocess_data('data.data', 22)
 
     primes = prime_finder()
 
