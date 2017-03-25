@@ -5,115 +5,157 @@ from collections import Counter, defaultdict
 from random import shuffle
 from scipy.spatial import distance
 
-
-"""
-    Probably don't need a main in the final submission
-"""
 def main():
+    '''
+    REMOVE ME BEFORE SUBMITTING
+    '''
     # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 2)
 
-    primes = prime_finder()
+    # Choose k = 5 for the 2 case.
+    evaluation(data_set, dist='euclidean', k=31)
 
-
-    # Choose k = 5 for the 2 case. 
-    for possible_value in primes:
-        evaluation(data_set, dist='euclidean', k = possible_value)
-
-
-def prime_finder():
-    not_primes = set(j for i in range(2, 11) for j in range(i*2, 100, i))
-    primes = [x for x in range(3, 100) if x not in not_primes]
-    return primes
-
-"""
-    preprocess_data in the specification takes only one argument
-    but our preprocess_data takes two arguments, the second one
-    specifying the dataset we are going to be dealing with on
-    a particular run.
-    Value of parameter abalone = 2 means we are dealing with
-    abalone - 2, abalone = 3 means we are dealing with abalone -3.
-"""
 # Tested.
 # Returns ([lists of 8 attributes], [class_label])
-def preprocess_data(filename, abalone = 3):
-    # Load data
+def preprocess_data(filename, abalone=3):
+    '''
+    Processes the input data before doing any sort of classification.
+    Returns the data_set as a tuple: ([list with row of 8 attributes],
+    [list of class_labels]).
+    The function also takes the categorical gender attribute and turns
+    it into a representation using numbers that plays well with our
+    similarity metrics i.e it turns male into 0, infant into the
+    mean numerical value of all the numerical attributes in the data set
+    and female to 2 times the mean numerical value.
+
+    Arguments:
+    filename: The name of the file
+    abalone: NOT PART OF THE SPEC, but takes whether we need to use
+    abalone-3 or abalone-2 for our calculations.
+
+    Return:
+    A 2-tuple made of a list of instances and a list of class labels. 
+    '''
+
+    # Total value of the numerical values
     total_numerical = 0
+    # Number of numerical values in the data set
     count_numerical = 0
+    # Load data
     with open(filename) as file:
         reader = csv.reader(file)
-
         # Construct instance list
         instances = []
+        # to_be_predicted is the attribute to be predicted i.e. Rings
+        # or age.
         to_be_predicted = []
-
+        # Read each row and attribute and add to instances.
         for row in reader:
             instance = []
             for attribute in row:
                 try:
                     instance.append(float(attribute))
+                    # Increment total_numerical for all numerical attributes.
                     total_numerical += float(attribute)
                     count_numerical += 1
                 except ValueError:
                     instance.append(attribute)
+
+            # Subtract the no. of rings as they are the value to be predicted.
             total_numerical -= instance[len(instance) - 1]
             count_numerical -= 1
             instances.append(instance[:len(instance) - 1])
             to_be_predicted.append(instance[len(instance) - 1])
-
-        # Construct class labels
-        class_labels = []
-        if abalone == 3:
-            for rings in to_be_predicted:
-                label = ''
-                if rings <= 8:
-                    label = 'very-young'
-                elif rings <= 10:
-                    label = 'middle-age'
-                else:
-                    label = 'old'
-                class_labels.append(label)
-        elif abalone == 2:
-            for rings in to_be_predicted:
-                label = ''
-                if rings <= 10:
-                    label = 'young'
-                else:
-                    label = 'old'
-                class_labels.append(label)
-        else:
-            return None
-
-    # Construct data set as a tuple of instances 
+    # Set class labels
+    class_labels = assign_class_label(to_be_predicted, abalone)
+    # Construct data set as a tuple of instances
     mean_numerical_value = total_numerical/count_numerical
-    
+    # Process instances so that the M, F and I values make more sense,
+    # see docstring of convert_categorical_attribute for more info.
     processed_instances = []
     for instance in instances:
-        processed_instance = convert_categorical_attribute(instance, mean_numerical_value)
+        processed_instance = convert_categorical_attribute(instance,
+                             mean_numerical_value)
         processed_instances.append(processed_instance)
-    
-    data_set = (processed_instances, class_labels)
 
+    data_set = (processed_instances, class_labels)
     return data_set
+
+def assign_class_label(to_be_predicted, abalone):
+    '''
+    Assigns labels based on numbers of rings and the value
+    of abalone supplied
+    '''
+    class_labels = []
+
+    # For abalone 3
+    if abalone == 3:
+        for rings in to_be_predicted:
+            label = ''
+            if rings <= 8:
+                label = 'very-young'
+            elif rings <= 10:
+                label = 'middle-age'
+            else:
+                label = 'old'
+            class_labels.append(label)
+            
+    # For abalone 2
+    elif abalone == 2:
+        for rings in to_be_predicted:
+            label = ''
+            if rings <= 10:
+                label = 'young'
+            else:
+                label = 'old'
+            class_labels.append(label)
+
+    return class_labels
+
 
 # Break categorical attribute Sex into 3 binary attributes: M, F, I
 def convert_categorical_attribute(instance, mean_numerical_value):
+    '''
+    Converts Male ('M') to 0, Female ('F') to 2 times the
+    mean_numerical_value of all the numerical values in the
+    data set and Infant ('I') to mean_numerical_value. I
+    fill in with mean_numerical_value so that the gender
+    doesn't weigh too heavily. Also infant is between
+    male and female, to signify that male and female are
+    farthest apart.
+    '''
     # Assuming the attributes are provided in the given order
     val = instance[0]
     if val == 'M':
-        return [mean_numerical_value, 0, 0] + instance[1:]
+        return [0] + instance[1:]
     elif val == 'F':
-        return [0, mean_numerical_value, 0] + instance[1:]
+        return [2*mean_numerical_value] + instance[1:]
     elif val == 'I':
-        return [0, 0, mean_numerical_value] + instance[1:]
-    else:
-        return [0, 0, 0] + instance[1:]
+        return [mean_numerical_value] + instance[1:]
 
+def get_neighbors(instance, training_data_set, k, method):
+    '''
+    Finds the k closest neighbours to the instance parameter
+    based on the distance method provided as parameter
+    '''
+    # Get class labels and scores
+    training_instances = training_data_set[0]
+    class_labels = training_data_set[1]
+    size = len(training_instances)
+    scores = []
+    for i in range(size):
+        scores.append((class_labels[i], compare_instance(instance,
+                       training_instances[i], method)))
 
-
+    # Sort result
+    sorted_scores = sorted(scores, key=lambda x: x[1])
+    return sorted_scores[:k]
 
 def compare_instance(instance_0, instance_1, method):
-
+    '''
+    Compares instances based on the name of the methods
+    passed to it
+    '''
     if method == 'euclidean':
         return euclidean_dist(instance_0, instance_1)
     elif method == 'cos':
@@ -123,8 +165,11 @@ def compare_instance(instance_0, instance_1, method):
     else:
         return None
 
-# Tested.
 def euclidean_dist(instance_0, instance_1):
+    '''
+    Computes and returns the Euclidean distance between
+    instance_0 and instance_1
+    '''
     # Assuming both instances have the same num of attributes
     length = len(instance_0)
     square_sum = 0
@@ -132,93 +177,47 @@ def euclidean_dist(instance_0, instance_1):
         square_sum += (instance_0[i] - instance_1[i]) ** 2
     return square_sum ** 0.5
 
-def test_euclidean(data_set):
-    count = 0
-    # Test for euclidean correctness.
-    for row1 in data_set[0]:
-        row1 = convert_categorical_attribute(row1)
-        print(count)
-        count += 1
-        for row2 in data_set[0]:
-            row2 = convert_categorical_attribute(row2)
-            if(euclidean_dist(row1, row2) - distance.euclidean(row1, row2) >= 0.001):
-                print("Euclidean Distance is wrong\n")
-        #our_dist = euclidean_dist(row1, row2)
-        #correct_dist = numpy.linalg.norm(numpy.asarray(row1) - numpy.asarray(row2))
-
 # Tested.
 def cos_dist(instance_0, instance_1):
+    '''
+    Computes and returns the Cosine Distance between
+    instance_0 and instance_1
+    The cosine distance = 1 - cosine similarity
+    To give it the same behaviour as euclidean and
+    manhattan distance
+    '''
     mag_0 = 0
     mag_1 = 0
     dot_prod = 0
-    for i in range(len(instance_0)):
+    length = len(instance_0)
+    for i in range(length):
         mag_0 += instance_0[i] ** 2
         mag_1 += instance_1[i] ** 2
         dot_prod += instance_0[i] * instance_1[i]
     mag_0 = mag_0 ** 0.5
     mag_1 = mag_1 ** 0.5
-    #I feel like this should be dot_prod = 0
+
     if dot_prod == 0: #Orthogonal
         return 0
     else:
-        # Give cos dist the same behavior (smaller == better) as euclidean and manhattan
-        # similarity -> distance, thus the negation.
+        # Give cos dist the same behavior (smaller == better) as euclidean
+        # and manhattan
         return 1 - dot_prod / (mag_0 * mag_1)
 
-
-def test_cosine(data_set):
-    count = 0
-    # Test for cosine distance correctness.
-    for row1 in data_set[0]:
-        row1 = convert_categorical_attribute(row1)
-        print(count)
-        count += 1
-        for row2 in data_set[0]:
-            row2 = convert_categorical_attribute(row2)
-            if(cos_dist(row1, row2) - (distance.cosine(row1, row2)) >= 0.001):
-                print("Cosine Distance is wrong\n")
-
-# Tested.
 def manhattan_dist(instance_0, instance_1):
+    '''
+    Computes and returns the manhattan distance
+    between instance_0 and instance_1
+    '''
     total = 0
-    for i in range(len(instance_0)):
+    length = len(instance_0)
+    for i in range(length):
         total += abs(instance_0[i] - instance_1[i])
     return total
 
-def test_manhattan(data_set):
-    count = 0
-    # Test for manhattan correctness.
-    for row1 in data_set[0]:
-        row1 = convert_categorical_attribute(row1)
-        print(count)
-        count += 1
-        for row2 in data_set[0]:
-            row2 = convert_categorical_attribute(row2)
-            if(manhattan_dist(row1, row2) - (distance.cityblock(row1, row2)) >= 0.001):
-                print("Manhattan Distance is wrong\n")
 
-
-def get_neighbors(instance, training_data_set, k, method):
-    # Get class labels and scores
-    training_instances = training_data_set[0]
-    class_labels = training_data_set[1]
-    size = len(training_instances)
-    scores = []
-    for i in range(size):
-        scores.append((class_labels[i], compare_instance(instance, training_instances[i], method)))
-
-    # Sort result
-    sorted_scores = sorted(scores, key=lambda x:x[1])
-    return sorted_scores[:k]
-
-'''
-data_set: 2-tuple. ([list of instances], [list of class labels])
-metric: accuracy || recall || precision || error
-dist: euclidean || cos || manhattan
-k: positive int
-voting: ew || ild || id
-'''
 def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild'):
+    
     score = 0
     partitioned_sets = partition_data(data_set)
     # Perform validation as many times as there are are datasets. 
@@ -268,6 +267,16 @@ def single_pass_eval(training_set, test_set, metric, dist, k, voting):
     else:
         return None
 
+
+def prime_finder():
+    ''''
+    Finds prime numbers in a certain range, the prime numbers were
+    used as prospective k values in the k nearest neighbour classifier
+    to find optimum values of key
+    '''
+    not_primes = set(j for i in range(2, 11) for j in range(i*2, 100, i))
+    primes = [x for x in range(3, 100) if x not in not_primes]
+    return primes
 
 # Checked but not tested.
 def partition_data(data_set):
@@ -451,7 +460,46 @@ def complete_error(test_set, predicted_classes):
 
     return error
 
+''' Tests for the distance metrics '''
+'''
+def test_euclidean(data_set):
+    count = 0
+    # Test for euclidean correctness.
+    for row1 in data_set[0]:
 
+        print(count)
+        count += 1
+        for row2 in data_set[0]:
+            if(euclidean_dist(row1, row2) - distance.euclidean(row1, row2) >= 0.001):
+                print("Euclidean Distance is wrong\n")
+        #our_dist = euclidean_dist(row1, row2)
+        #correct_dist = numpy.linalg.norm(numpy.asarray(row1) - numpy.asarray(row2))
+
+def test_cosine(data_set):
+    
+    count = 0
+    # Test for cosine distance correctness.
+    for row1 in data_set[0]:
+
+        print(count)
+        count += 1
+        for row2 in data_set[0]:
+
+            if(cos_dist(row1, row2) - (distance.cosine(row1, row2)) >= 0.001):
+                print("Cosine Distance is wrong\n")
+
+def test_manhattan(data_set):
+    count = 0
+    # Test for manhattan correctness.
+    for row1 in data_set[0]:
+
+        print(count)
+        count += 1
+        for row2 in data_set[0]:
+
+            if(manhattan_dist(row1, row2) - (distance.cityblock(row1, row2)) >= 0.001):
+                print("Manhattan Distance is wrong\n")
+'''
 
 if __name__ == '__main__':
     main()
