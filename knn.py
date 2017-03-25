@@ -2,6 +2,7 @@
 
 import csv
 from collections import Counter, defaultdict
+from random import shuffle
 
 
 """
@@ -10,11 +11,15 @@ from collections import Counter, defaultdict
 def main():
     # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
+    partition_data(data_set)
+    ''''
     instance = data_set[0][2156]
     neighbors = get_neighbors(instance, data_set, 1000, 'cos')
     print(predict_class(neighbors, 'ew'))
     print(predict_class(neighbors, 'ild'))
     print(predict_class(neighbors, 'id'))
+    print(instance)
+    print(partition_data(([1,2,2,2,3,3,4,5,5],[1])))'''
 
 
 """ 
@@ -115,6 +120,50 @@ def evaluation(data_set, metric='accuracy'):
         return 0
     else:
         return None
+
+
+def partition_data(data_set):
+    partitioned_sets = []
+    M = 10
+    set_size = len(data_set[0])
+    partition_size = set_size // M
+    set_size_divider = set_size % M
+
+    '''# List of random indices
+    random_index = list(range(set_size))
+    shuffle(random_index)'''
+
+    data_list = [list(instance) for instance in zip(data_set[0], data_set[1])]
+    shuffle(data_list)
+    instances = []
+    class_labels = []
+    for row in data_list:
+
+        instances.append(row[:len(row) - 1])
+        class_labels.append(row[len(row)- 1])
+
+    data_set = (instances, class_labels)
+
+
+    start = 0
+    for i in range(10):
+        if i < set_size_divider:
+
+            partitioned_sets.append((data_set[0][start:(start + partition_size + 1)],
+            data_set[1][start:(start + partition_size + 1)]))
+            start += partition_size + 1
+        else:
+
+            partitioned_sets.append((data_set[0][start:(start + partition_size)],
+            data_set[1][start:(start + partition_size)]))
+            start += partition_size
+
+    '''for (me, you) in partitioned_sets:
+        print((me, you))
+        print("\n")'''
+
+    return partitioned_sets
+
 
 
 
@@ -299,7 +348,6 @@ def convert_categorical_attribute(instance):
         return [0, 0, 1] + instance[1:]
     else:
         return [0, 0, 0] + instance[1:]
-
 
 
 if __name__ == '__main__':
