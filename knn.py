@@ -11,19 +11,10 @@ from scipy.spatial import distance
 """
 def main():
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data')
+    data_set = preprocess_data('data.data', 3)
+    # Choose k = 5 for the 2 case. 
+    print(evaluation(data_set, dist='cos', k = i))
 
-    ''''
-    instance = data_set[0][2156]
-    neighbors = get_neighbors(instance, data_set, 1000, 'cos')
-    print(predict_class(neighbors, 'ew'))
-    print(predict_class(neighbors, 'ild'))
-    print(predict_class(neighbors, 'id'))
-    print(instance)
-    print(partition_data(([1,2,2,2,3,3,4,5,5],[1])))'''
-    # print(len(data_set[0]))
-
-    print(evaluation(data_set, dist='cos', k = 5))
 
 
 """
