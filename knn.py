@@ -22,7 +22,7 @@ def main():
     print(instance)
     print(partition_data(([1,2,2,2,3,3,4,5,5],[1])))'''
     #print(len(data_set[0]))
-    print(evaluation(data_set))
+    print(evaluation(data_set, metric='precision'))
 
 
 
@@ -120,7 +120,7 @@ dist: euclidean || cos || manhattan
 k: positive int
 voting: ew || ild || id
 '''
-def evaluation(data_set, metric='accuracy', dist='euclidean', k=150, voting='ild'):
+def evaluation(data_set, metric='accuracy', dist='euclidean', k=200, voting='ew'):
     score = 0
     partitioned_sets = partition_data(data_set)
     for i in range(len(partitioned_sets)):
