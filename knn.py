@@ -175,18 +175,74 @@ def accuracy(test_set, predicted_classes, class_name):
 
     length = len(test_set)
     correct_predictions = 0
+
     for i in length:
         if test_set[1][i] == class_name and test_set[1][i] == predicted_classes[i]:
             correct_predictions += 1
+        
         elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
             correct_predictions += 1
-  
-    return correct_predictions/length
+           
+    return correct_predictions/length*100
 
-def complete_accuracy(test_set, predict_classes, abalone = 2):
+def complete_accuracy(test_set, predicted_classes):
     
+    classes = list(set(test_set[1]))
+    sum_accuracy = 0
+    for class_name in classes:
+        sum_accuracy += accuracy(test_set, predicted_classes, class_name)
+
+    return sum_accuracy/3
 
         
+def precision(test_set, predicted_classes, class_name):
+    
+    length = len(test_set)
+    true_positives = 0
+    false_positives = 0
+
+    for i in length:
+        if test_set[1][i] == class_name and predicted_classes[i] == class_name:
+            true_positives += 1
+        elif test_set[1][i] != class_name  and predicted_classes[i] == class_name:
+            false_positives += 1
+    
+    return true_positives/(true_positives + false_positives)
+            
+def complete_precision(test_set, predicted_classes):
+    
+    classes = list(set(test_set[1]))
+    sum_precision = 0
+    for class_name in classes:
+        sum_precision += precision(test_set, predicted_classes, class_name)
+    
+    return sum_precision/3
+
+def recall(test_set, predicted_classes, class_name):
+
+    length = len(test_set)
+    true_positives = 0
+    false_negatives = 0
+
+    for i in length:
+        if test_set[1][i] == class_name and predicted_classes[i] == class_name:
+            true_positives += 1
+        elif test_set[1][i] == class_name  and predicted_classes[i] != class_name:
+            false_negatives += 1
+    
+    return true_positives/(true_positives + false_negatives)
+
+def total_recall(test_set, predicted_classes):
+
+    classes = list(set(test_set[1]))
+    sum_recall = 0 
+    for class_name in classes:
+        sum_recall += recall(test_set, predicted_classes, class_name)
+
+    return sum_recall/3
+    
+
+     
 
 def cos_dist(instance_0, instance_1):
     mag_0 = 0
