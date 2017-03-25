@@ -12,12 +12,19 @@ from scipy.spatial import distance
 def main():
     # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
-    
+
+    primes = prime_finder()
+
 
     # Choose k = 5 for the 2 case. 
-    print(evaluation(data_set, dist='euclidean', k = 65))
+    for possible_value in primes:
+        evaluation(data_set, dist='euclidean', k = possible_value)
 
 
+def prime_finder():
+    not_primes = set(j for i in range(2, 11) for j in range(i*2, 100, i))
+    primes = [x for x in range(3, 100) if x not in not_primes]
+    return primes
 
 """
     preprocess_data in the specification takes only one argument
@@ -220,7 +227,7 @@ def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild')
         training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
         # print("Length of the training set is:" + str(len(training_data_set[0])))
         score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
-    return score / len(partitioned_sets)
+    print(str(k) + ", " + str(score / len(partitioned_sets)))
 
 
 # Combine two lists of data sets into one set
