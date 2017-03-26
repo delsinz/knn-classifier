@@ -13,7 +13,7 @@ def main():
     data_set = preprocess_data('data.data', 2)
 
     # Choose k = 5 for the 2 case.
-    evaluation(data_set, dist='euclidean', k=31)
+    evaluation(data_set, dist='euclidean', k=1)
 
 # Tested.
 # Returns ([lists of 8 attributes], [class_label])
@@ -112,8 +112,18 @@ def assign_class_label(to_be_predicted, abalone):
 
     return class_labels
 
+def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild'):
+    
+    score = 0
+    partitioned_sets = partition_data(data_set)
+    # Perform validation as many times as there are are datasets. 
+    for i in range(len(partitioned_sets)):
+        test_data_set = partitioned_sets[i]
+        training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
+        # print("Length of the training set is:" + str(len(training_data_set[0])))
+        score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
+    print(str(k) + ", " + str(score / len(partitioned_sets)))
 
-# Break categorical attribute Sex into 3 binary attributes: M, F, I
 def convert_categorical_attribute(instance, mean_numerical_value):
     '''
     Converts Male ('M') to 0, Female ('F') to 2 times the
@@ -215,20 +225,6 @@ def manhattan_dist(instance_0, instance_1):
         total += abs(instance_0[i] - instance_1[i])
     return total
 
-
-def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild'):
-    
-    score = 0
-    partitioned_sets = partition_data(data_set)
-    # Perform validation as many times as there are are datasets. 
-    for i in range(len(partitioned_sets)):
-        test_data_set = partitioned_sets[i]
-        training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
-        # print("Length of the training set is:" + str(len(training_data_set[0])))
-        score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
-    print(str(k) + ", " + str(score / len(partitioned_sets)))
-
-
 # Combine two lists of data sets into one set
 def combine_data_sets(training_subsets0, training_subsets1):
     instances = []
@@ -311,7 +307,6 @@ def partition_data(data_set):
     
     # The shuffled data set. 
     shuffled_data_set = (instances, class_labels)
-
     start = 0
 
     # 10 fold cross validation. 
@@ -385,7 +380,7 @@ def accuracy(test_set, predicted_classes, class_name):
         elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
             correct_predictions += 1
 
-    # print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length))
+    print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length) + " for class " + class_name)
     return correct_predictions/length*100
 
 
