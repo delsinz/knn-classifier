@@ -17,7 +17,7 @@ def main():
     REMOVE ME BEFORE SUBMITTING
     '''
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data', 3)
+    data_set = preprocess_data('data.data', 2)
 
     # Choose k = 5 for the 2 case.
     evaluation(data_set, dist='euclidean', k=31)
@@ -94,10 +94,16 @@ def read_file(filename, abalone):
             for i in range(len(row)):
                 attribute = row[i]
                 try:
-                    instance.append(float(attribute))
-                    # Increment total_numerical for all numerical attributes.
-                    total_numerical += float(attribute)
-                    count_numerical += 1
+                    if i in [3, 5, 7]:
+                        instance.append(float(attribute)*2)
+                        # Increment total_numerical for all numerical attributes.
+                        total_numerical += float(attribute)
+                        count_numerical += 1
+                    else:
+                        instance.append(float(attribute))
+                        # Increment total_numerical for all numerical attributes.
+                        total_numerical += float(attribute)
+                        count_numerical += 1
                 except ValueError:
                     instance.append(attribute)
 

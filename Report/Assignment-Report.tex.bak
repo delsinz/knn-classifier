@@ -1,0 +1,88 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University Assignment Title Page 
+% LaTeX Template
+% Version 1.0 (27/12/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Title_Creation)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% 
+% Instructions for using this template:
+% This title page is capable of being compiled as is. This is not useful for 
+% including it in another document. To do this, you have two options: 
+%
+% 1) Copy/paste everything between \begin{document} and \end{document} 
+% starting at \begin{titlepage} and paste this into another LaTeX file where you 
+% want your title page.
+% OR
+% 2) Remove everything outside the \begin{titlepage} and \end{titlepage} and 
+% move this file to the same directory as the LaTeX file you wish to add it to. 
+% Then add \input{./title_page_1.tex} to your LaTeX file where you want your
+% title page.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\title{Title page with logo}
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{geometry}
+\pagestyle{fancy}
+\geometry
+{
+ a4paper,==
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+}
+\fancyheadoffset{0.1cm}
+\lhead{Shreyash Patodia : 767336 }
+\rhead{spatodia}
+
+
+
+\begin{document}
+
+\section{Introduction}
+
+In this assignment we were asked to classify instances in the Abalone Dataset into one of two 
+('young' or 'old') or three ('very young', 'old' and 'middle-age') categories. The classification method meant to be used was K-Nearest Neighbours. 
+
+
+\section{Similarity Metrics}
+\label{sec:examples}
+
+\subsection{Euclidean Distance}
+
+The first similarity metric that we implemented was Euclidean Distance, it is natural to think in terms of the Euclidean Distance when the attributes are continuous in nature (the only non-continuous attribute was Gender which we converted to a numerical description, see section on pre-processing for more). Euclidean distance makes sense for this classification problem since  if two abalones have some attributes where the values for one of them are much larger than values for the other, it is likely that the 
+
+% Commands to include a figure:
+\begin{figure}[!htb]
+\centering
+% \includegraphics[width=0.5\textwidth]{BadExample.png}
+% \caption{\label{fig:frog}Bad Design Example}
+\end{figure}
+
+
+
+\subsection{Supertype and subtype}
+
+
+
+\subsection{Some other remarks}
+
+
+
+\end{document}
