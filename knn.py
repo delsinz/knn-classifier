@@ -52,11 +52,16 @@ def preprocess_data(filename, abalone=3):
         # Read each row and attribute and add to instances.
         for row in reader:
             instance = []
-            for attribute in row:
+            for i in range(len(row)):
+                attribute = row[i]
                 try:
-                    instance.append(float(attribute))
-                    # Increment total_numerical for all numerical attributes.
-                    total_numerical += float(attribute)
+                    if i in [1,2, 3]:
+                        instance.append(float(attribute) * 2)
+                        total_numerical += float(attribute) * 2
+                    else:
+                        instance.append(float(attribute))
+                        # Increment total_numerical for all numerical attributes.
+                        total_numerical += float(attribute)
                     count_numerical += 1
                 except ValueError:
                     instance.append(attribute)
@@ -233,6 +238,7 @@ def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild')
         training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
         # print("Length of the training set is:" + str(len(training_data_set[0])))
         score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
+    #return score / len(partitioned_sets)
     print(str(k) + ", " + str(score / len(partitioned_sets)))
 
 
