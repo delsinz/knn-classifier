@@ -1,8 +1,15 @@
-""" Remember to add our names, student IDs here """
+"""
+Shreyash Patodia, Student ID: 767336
+Username: spatodia
+
+Mingyang Zhang, Student ID: 650242
+Username: mingyangz
+"""
 
 import csv
 from collections import Counter, defaultdict
 from random import shuffle
+from math import sqrt
 from scipy.spatial import distance
 
 def main():
@@ -10,7 +17,7 @@ def main():
     REMOVE ME BEFORE SUBMITTING
     '''
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data', 2)
+    data_set = preprocess_data('data.data', 3)
 
     # Choose k = 5 for the 2 case.
     evaluation(data_set, dist='euclidean', k=31)
@@ -41,6 +48,7 @@ def preprocess_data(filename, abalone=3):
     
     (instances, class_labels, mean_numerical_value) = read_file(filename, abalone)
 
+   
     # Process instances so that the M, F and I values make more sense,
     # see docstring of convert_categorical_attribute for more info.
     processed_instances = []
@@ -50,10 +58,21 @@ def preprocess_data(filename, abalone=3):
         processed_instances.append(processed_instance)
 
     data_set = (processed_instances, class_labels)
-    return data_set
+
+    means = column_means(data_set)
+    stdevs = column_stdevs(data_set, means)
+ 
+
+    standardized_data_set = standardize_dataset(data_set, means, stdevs)
+    for i in range(10):
+        print(str(standardized_data_set[0][i]) + ' ' + str(standardized_data_set[1][i]))
+    return standardized_data_set
 
 def read_file(filename, abalone):
-
+    '''
+    Reads the file and returns our dataset along with some the mean_numerical_value
+    of the dataset
+    '''
      # Total value of the numerical values
     total_numerical = 0
     # Number of numerical values in the data set
@@ -69,7 +88,8 @@ def read_file(filename, abalone):
         # Read each row and attribute and add to instances.
         for row in reader:
             instance = []
-            for attribute in row:
+            for i in range(len(row)):
+                attribute = row[i]
                 try:
                     instance.append(float(attribute))
                     # Increment total_numerical for all numerical attributes.
@@ -88,7 +108,35 @@ def read_file(filename, abalone):
     # Set class labels
     class_labels = assign_class_label(to_be_predicted, abalone)
     return (instances, class_labels, mean_numerical_value)
-    
+
+
+def column_means(data_set):
+
+    instances = data_set[0]
+    means = [0 for i in range(len(instances[0]))]
+
+    for i in range(len(instances[0])):
+	    col_values = [row[i] for row in instances]
+	    means[i] = sum(col_values) / float(len(instances))
+    return means
+
+def column_stdevs(data_set, means):
+    instances = data_set[0]
+    stdevs = [0 for i in range(len(instances[0]))]
+
+    for i in range(len(instances[0])):
+	    variance = [pow(row[i]-means[i], 2) for row in instances]
+	    stdevs[i] = sum(variance)
+    stdevs = [sqrt(x/(float(len(instances)-1))) for x in stdevs]
+    return stdevs
+
+def standardize_dataset(data_set, means, stdevs):
+    instances = data_set[0]
+    for row in instances:
+        for i in range(len(row)):
+            row[i] = (row[i] - means[i]) / stdevs[i]
+    return (instances, data_set[1])
+
 def assign_class_label(to_be_predicted, abalone):
     '''
     Assigns labels based on numbers of rings and the value
@@ -121,6 +169,8 @@ def assign_class_label(to_be_predicted, abalone):
     return class_labels
 
 
+
+
 # Break categorical attribute Sex into 3 binary attributes: M, F, I
 def convert_categorical_attribute(instance, mean_numerical_value):
     '''
@@ -135,11 +185,11 @@ def convert_categorical_attribute(instance, mean_numerical_value):
     # Assuming the attributes are provided in the given order
     val = instance[0]
     if val == 'M':
-        return [mean_numerical_value] + instance[1:]
+        return [-mean_numerical_value] + instance[1:]
     elif val == 'F':
-        return [3*mean_numerical_value] + instance[1:]
+        return [0] + instance[1:]
     elif val == 'I':
-        return [2*mean_numerical_value] + instance[1:]
+        return [mean_numerical_value] + instance[1:]
 
 def get_neighbors(instance, training_data_set, k, method):
     '''
@@ -240,11 +290,12 @@ def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild')
     # Perform validation as many times as there are are datasets.
     for i in range(len(partitioned_sets)):
         test_data_set = partitioned_sets[i]
-        training_data_set = combine_data_sets(partitioned_sets[:i],
-                                                partitioned_sets[i+1:])
-    
-        score += single_pass_eval(training_data_set, 
-                                    test_data_set, metric, dist, k, voting)
+
+        training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
+        # print("Length of the training set is:" + str(len(training_data_set[0])))
+        score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
+    #return score / len(partitioned_sets)
+
     print(str(k) + ", " + str(score / len(partitioned_sets)))
 
 
@@ -432,8 +483,9 @@ def accuracy(test_set, predicted_classes, class_name):
         elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
             correct_predictions += 1
 
-    print("Correctly predicted : " + str(correct_predictions) + 
-          " out of " + str(length))
+
+    print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length))
+
     return correct_predictions/length*100
 
 
