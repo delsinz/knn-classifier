@@ -1,8 +1,15 @@
-""" Remember to add our names, student IDs here """
+"""
+Shreyash Patodia, Student ID: 767336
+Username: spatodia
+
+Mingyang Zhang, Student ID: 650242
+Username: mingyangz
+"""
 
 import csv
 from collections import Counter, defaultdict
 from random import shuffle
+from math import sqrt
 from scipy.spatial import distance
 
 def main():
@@ -10,7 +17,7 @@ def main():
     REMOVE ME BEFORE SUBMITTING
     '''
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data', 2)
+    data_set = preprocess_data('data.data', 3)
 
     # Choose k = 5 for the 2 case.
     evaluation(data_set, dist='euclidean', k=1)
@@ -34,14 +41,43 @@ def preprocess_data(filename, abalone=3):
     abalone-3 or abalone-2 for our calculations.
 
     Return:
-    A 2-tuple made of a list of instances and a list of class labels. 
+    A 2-tuple made of a list of instances and a list of class labels.
     '''
+   
+    # Load data
+    
+    (instances, class_labels, mean_numerical_value) = read_file(filename, abalone)
 
-    # Total value of the numerical values
+   
+    # Process instances so that the M, F and I values make more sense,
+    # see docstring of convert_categorical_attribute for more info.
+    processed_instances = []
+    for instance in instances:
+        processed_instance = convert_categorical_attribute(instance,
+                             mean_numerical_value)
+        processed_instances.append(processed_instance)
+
+    data_set = (processed_instances, class_labels)
+
+    means = column_means(data_set)
+    stdevs = column_stdevs(data_set, means)
+ 
+
+    standardized_data_set = standardize_dataset(data_set, means, stdevs)
+    for i in range(10):
+        print(str(standardized_data_set[0][i]) + ' ' + str(standardized_data_set[1][i]))
+    return standardized_data_set
+
+def read_file(filename, abalone):
+    '''
+    Reads the file and returns our dataset along with some the mean_numerical_value
+    of the dataset
+    '''
+     # Total value of the numerical values
     total_numerical = 0
     # Number of numerical values in the data set
     count_numerical = 0
-    # Load data
+    
     with open(filename) as file:
         reader = csv.reader(file)
         # Construct instance list
@@ -52,7 +88,8 @@ def preprocess_data(filename, abalone=3):
         # Read each row and attribute and add to instances.
         for row in reader:
             instance = []
-            for attribute in row:
+            for i in range(len(row)):
+                attribute = row[i]
                 try:
                     instance.append(float(attribute))
                     # Increment total_numerical for all numerical attributes.
@@ -66,20 +103,39 @@ def preprocess_data(filename, abalone=3):
             count_numerical -= 1
             instances.append(instance[:len(instance) - 1])
             to_be_predicted.append(instance[len(instance) - 1])
+            
+    mean_numerical_value = total_numerical/count_numerical
     # Set class labels
     class_labels = assign_class_label(to_be_predicted, abalone)
-    # Construct data set as a tuple of instances
-    mean_numerical_value = total_numerical/count_numerical
-    # Process instances so that the M, F and I values make more sense,
-    # see docstring of convert_categorical_attribute for more info.
-    processed_instances = []
-    for instance in instances:
-        processed_instance = convert_categorical_attribute(instance,
-                             mean_numerical_value)
-        processed_instances.append(processed_instance)
+    return (instances, class_labels, mean_numerical_value)
 
-    data_set = (processed_instances, class_labels)
-    return data_set
+
+def column_means(data_set):
+
+    instances = data_set[0]
+    means = [0 for i in range(len(instances[0]))]
+
+    for i in range(len(instances[0])):
+	    col_values = [row[i] for row in instances]
+	    means[i] = sum(col_values) / float(len(instances))
+    return means
+
+def column_stdevs(data_set, means):
+    instances = data_set[0]
+    stdevs = [0 for i in range(len(instances[0]))]
+
+    for i in range(len(instances[0])):
+	    variance = [pow(row[i]-means[i], 2) for row in instances]
+	    stdevs[i] = sum(variance)
+    stdevs = [sqrt(x/(float(len(instances)-1))) for x in stdevs]
+    return stdevs
+
+def standardize_dataset(data_set, means, stdevs):
+    instances = data_set[0]
+    for row in instances:
+        for i in range(len(row)):
+            row[i] = (row[i] - means[i]) / stdevs[i]
+    return (instances, data_set[1])
 
 def assign_class_label(to_be_predicted, abalone):
     '''
@@ -99,7 +155,7 @@ def assign_class_label(to_be_predicted, abalone):
             else:
                 label = 'old'
             class_labels.append(label)
-            
+
     # For abalone 2
     elif abalone == 2:
         for rings in to_be_predicted:
@@ -124,6 +180,9 @@ def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild')
         score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
     print(str(k) + ", " + str(score / len(partitioned_sets)))
 
+
+# Break categorical attribute Sex into 3 binary attributes: M, F, I
+
 def convert_categorical_attribute(instance, mean_numerical_value):
     '''
     Converts Male ('M') to 0, Female ('F') to 2 times the
@@ -137,9 +196,9 @@ def convert_categorical_attribute(instance, mean_numerical_value):
     # Assuming the attributes are provided in the given order
     val = instance[0]
     if val == 'M':
-        return [0] + instance[1:]
+        return [-mean_numerical_value] + instance[1:]
     elif val == 'F':
-        return [2*mean_numerical_value] + instance[1:]
+        return [0] + instance[1:]
     elif val == 'I':
         return [mean_numerical_value] + instance[1:]
 
@@ -225,8 +284,39 @@ def manhattan_dist(instance_0, instance_1):
         total += abs(instance_0[i] - instance_1[i])
     return total
 
+
+def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild'):
+    '''
+    Evaluate classifier based on the distance function, k value, and voting 
+    method.
+    data_set: 2 tuple. ([list of instances], [list of class labels])
+    metric: accuracy || recall || precision || error
+    dist: euclidean || cos || manhattan
+    k: positive integer
+    ew: equal weight, ild: inverse linear distance, id: inverse distance. 
+    voting: ew || ild || id
+    '''
+    score = 0
+    partitioned_sets = partition_data(data_set)
+    # Perform validation as many times as there are are datasets.
+    for i in range(len(partitioned_sets)):
+        test_data_set = partitioned_sets[i]
+
+        training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
+        # print("Length of the training set is:" + str(len(training_data_set[0])))
+        score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
+    #return score / len(partitioned_sets)
+
+    print(str(k) + ", " + str(score / len(partitioned_sets)))
+
+
 # Combine two lists of data sets into one set
 def combine_data_sets(training_subsets0, training_subsets1):
+    '''
+    Combines the M-1 partitions in of the dataset into one
+    set so that they can be used as training data for the
+    current pass of the M-Fold Cross validation
+    '''
     instances = []
     class_labels = []
     for subset in training_subsets0:
@@ -243,6 +333,10 @@ def combine_data_sets(training_subsets0, training_subsets1):
 
 
 def single_pass_eval(training_set, test_set, metric, dist, k, voting):
+    '''
+    Evaluate the classifier based on test_set.
+    The result will be averaged in M-fold cross-validation.
+    '''
     predicted_classes = []
     for instance in test_set[0]:
         neighbors = get_neighbors(instance, training_set, k, dist)
@@ -280,15 +374,15 @@ def partition_data(data_set):
     partitioned_sets = []
     M = 10
     set_size = len(data_set[0])
-    # All partitions must be of this size. 
+    # All partitions must be of this size.
     partition_size = set_size // M
-    
+
     '''
-       These instances are the remainder after making all the partitions of the 
+       These instances are the remainder after making all the partitions of the
        same size and one element will be added to partitions (starting from the first) until
        we are out of the residual instances.
        So set size divider is the number of partitions (0th partition to (set_size_divider - 1)th partion)
-       which will have one element more. 
+       which will have one element more.
     '''
     set_size_divider = set_size % M
 
@@ -304,21 +398,23 @@ def partition_data(data_set):
     for row in data_list:
         instances.append(row[:len(row) - 1])
         class_labels.append(row[len(row)- 1])
-    
-    # The shuffled data set. 
+
+    # The shuffled data set.
     shuffled_data_set = (instances, class_labels)
     start = 0
 
-    # 10 fold cross validation. 
-    # Each elements of partitioned_sets will be used as test instance once. 
+    # 10 fold cross validation.
+    # Each elements of partitioned_sets will be used as test instance once.
     for i in range(10):
         if i < set_size_divider:
-            partitioned_sets.append((shuffled_data_set[0][start:(start + partition_size + 1)],
-            shuffled_data_set[1][start:(start + partition_size + 1)]))
+            partitioned_sets.append((
+                shuffled_data_set[0][start:(start + partition_size + 1)],
+                shuffled_data_set[1][start:(start + partition_size + 1)]))
             start += partition_size + 1
         else:
-            partitioned_sets.append((shuffled_data_set[0][start:(start + partition_size)],
-            shuffled_data_set[1][start:(start + partition_size)]))
+            partitioned_sets.append((
+                shuffled_data_set[0][start:(start + partition_size)],
+                shuffled_data_set[1][start:(start + partition_size)]))
             start += partition_size
 
     return partitioned_sets
@@ -326,7 +422,11 @@ def partition_data(data_set):
 
 
 
-def predict_class(neighbors, method = 'ew'):
+def predict_class(neighbors, method):
+    '''
+    Takes neighbors (list of class labels) and method (string that specifies
+    voting method) as arguments. Return the predicted class.
+    '''
     if method == 'ew':
         return predict_equal_weight(neighbors)
     elif method == 'ild':
@@ -345,6 +445,11 @@ def predict_equal_weight(neighbors):
 
 
 def predict_inverse_linear_dist(neighbors):
+    '''
+    Computes the inverse distance of neighbors of a certain type
+    from the test data point and returns the maximum of the inverses
+    i.e. the most similar class with label_votes
+    '''
     max_dist = max([neighbor[1] for neighbor in neighbors])
     min_dist = min([neighbor[1] for neighbor in neighbors])
     label_votes = defaultdict(float)
@@ -360,8 +465,13 @@ def predict_inverse_linear_dist(neighbors):
 
 
 def predict_inverse_dist(neighbors):
+    '''
+    Computes the inverse distance of neighbors of a certain type
+    from the test data point and returns the maximum of the inverses
+    i.e. the most similar class with label_votes
+    '''
     label_votes = defaultdict(float)
-    offset = 0.5 # Offset > 1 so that weight for cos dis won't be negative due to the way cos dist is handled
+    offset = 0.5
     for neighbor in neighbors:
         weight = 1 / (neighbor[1] + offset)
         label_votes[neighbor[0]] += weight
@@ -369,7 +479,10 @@ def predict_inverse_dist(neighbors):
 
 
 def accuracy(test_set, predicted_classes, class_name):
-
+    '''
+    Finds the accuracy taking the class_name in the function arguments
+    as the positive class and the rest as the negative class
+    '''
     length = len(test_set[0])
     correct_predictions = 0
 
@@ -381,11 +494,15 @@ def accuracy(test_set, predicted_classes, class_name):
             correct_predictions += 1
 
     print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length) + " for class " + class_name)
+
     return correct_predictions/length*100
 
 
 
 def complete_accuracy(test_set, predicted_classes):
+    '''
+    Finds the accuracy for all the classes and averages them
+    '''
     classes = list(set(test_set[1]))
     sum_accuracy = 0
     for class_name in classes:
@@ -396,6 +513,10 @@ def complete_accuracy(test_set, predicted_classes):
 
 
 def precision(test_set, predicted_classes, class_name):
+    '''
+    Finds the precision taking the class_name in the function arguments
+    as the positive class and the rest as the negative class
+    '''
     length = len(test_set[0])
     true_positives = 0
     false_positives = 0
@@ -403,7 +524,7 @@ def precision(test_set, predicted_classes, class_name):
     for i in range(length):
         if test_set[1][i] == class_name and predicted_classes[i] == class_name:
             true_positives += 1
-        elif test_set[1][i] != class_name  and predicted_classes[i] == class_name:
+        elif test_set[1][i] != class_name and predicted_classes[i] == class_name:
             false_positives += 1
     if true_positives + false_positives == 0:
         return 1
@@ -411,7 +532,9 @@ def precision(test_set, predicted_classes, class_name):
         return true_positives/(true_positives + false_positives)
 
 def complete_precision(test_set, predicted_classes):
-
+    '''
+    Finds the percision for all the classes and averages them
+    '''
     classes = list(set(test_set[1]))
     sum_precision = 0
     for class_name in classes:
@@ -420,7 +543,10 @@ def complete_precision(test_set, predicted_classes):
     return sum_precision/len(classes)
 
 def recall(test_set, predicted_classes, class_name):
-
+    '''
+    Finds the recall taking class_name in the function arguments
+    as the positive class and the rest as the negative class
+    '''
     length = len(test_set[0])
     true_positives = 0
     false_negatives = 0
@@ -428,7 +554,7 @@ def recall(test_set, predicted_classes, class_name):
     for i in range(length):
         if test_set[1][i] == class_name and predicted_classes[i] == class_name:
             true_positives += 1
-        elif test_set[1][i] == class_name  and predicted_classes[i] != class_name:
+        elif test_set[1][i] == class_name and predicted_classes[i] != class_name:
             false_negatives += 1
 
     if true_positives + false_negatives == 0:
@@ -439,20 +565,22 @@ def recall(test_set, predicted_classes, class_name):
 
 
 def complete_recall(test_set, predicted_classes):
-
+    '''
+    Finds the recall for all the classes and averages them
+    '''
     classes = list(set(test_set[1]))
     sum_recall = 0
     for class_name in classes:
         sum_recall += recall(test_set, predicted_classes, class_name)
-        
+
     return sum_recall/len(classes)
 
 
-
 def complete_error(test_set, predicted_classes):
-
+    '''
+    Finds the error as 100 - accuracy of the system
+    '''
     error = 100 - complete_accuracy(test_set, predicted_classes)
-
     return error
 
 ''' Tests for the distance metrics '''
@@ -465,13 +593,12 @@ def test_euclidean(data_set):
         print(count)
         count += 1
         for row2 in data_set[0]:
-            if(euclidean_dist(row1, row2) - distance.euclidean(row1, row2) >= 0.001):
+            if(euclidean_dist(row1, row2) 
+                - distance.euclidean(row1, row2) >= 0.001):
                 print("Euclidean Distance is wrong\n")
-        #our_dist = euclidean_dist(row1, row2)
-        #correct_dist = numpy.linalg.norm(numpy.asarray(row1) - numpy.asarray(row2))
 
 def test_cosine(data_set):
-    
+
     count = 0
     # Test for cosine distance correctness.
     for row1 in data_set[0]:
@@ -480,7 +607,8 @@ def test_cosine(data_set):
         count += 1
         for row2 in data_set[0]:
 
-            if(cos_dist(row1, row2) - (distance.cosine(row1, row2)) >= 0.001):
+            if(cos_dist(row1, row2) 
+                - (distance.cosine(row1, row2)) >= 0.001):
                 print("Cosine Distance is wrong\n")
 
 def test_manhattan(data_set):
@@ -492,9 +620,9 @@ def test_manhattan(data_set):
         count += 1
         for row2 in data_set[0]:
 
-            if(manhattan_dist(row1, row2) - (distance.cityblock(row1, row2)) >= 0.001):
+            if(manhattan_dist(row1, row2) 
+                - (distance.cityblock(row1, row2)) >= 0.001):
                 print("Manhattan Distance is wrong\n")
 '''
-
 if __name__ == '__main__':
     main()
