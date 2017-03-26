@@ -461,7 +461,6 @@ def complete_error(test_set, predicted_classes):
     return error
 
 ''' Tests for the distance metrics '''
-'''
 def test_euclidean(data_set):
     count = 0
     # Test for euclidean correctness.
@@ -499,7 +498,7 @@ def test_manhattan(data_set):
 
             if(manhattan_dist(row1, row2) - (distance.cityblock(row1, row2)) >= 0.001):
                 print("Manhattan Distance is wrong\n")
-'''
+
 
 if __name__ == '__main__':
     main()
