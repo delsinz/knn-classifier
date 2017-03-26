@@ -70,8 +70,8 @@
 \begin{minipage}{0.4\textwidth}
 \begin{center}
 \emph{Authors:}\\
-Shreyash Patodia, 767336 \\% Your name
-Mingyang Zhang, 650242
+Shreyash Patodia, Student ID: 767336 \\% Your name
+Mingyang Zhang, Student ID: 650242
 \end{center}
 \end{minipage}
 \\[2cm]
@@ -84,7 +84,7 @@ Mingyang Zhang, 650242
 %	DATE SECTION
 %----------------------------------------------------------------------------------------
 
-{\large \today}\\[1.5cm] % Date, change the \today to a set date if you want to be precise
+{\large \today}\\[2cm] % Date, change the \today to a set date if you want to be precise
 
 %----------------------------------------------------------------------------------------
 %	LOGO SECTION
