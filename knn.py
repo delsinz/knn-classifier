@@ -34,7 +34,7 @@ def preprocess_data(filename, abalone=3):
     abalone-3 or abalone-2 for our calculations.
 
     Return:
-    A 2-tuple made of a list of instances and a list of class labels. 
+    A 2-tuple made of a list of instances and a list of class labels.
     '''
 
     # Total value of the numerical values
@@ -99,7 +99,7 @@ def assign_class_label(to_be_predicted, abalone):
             else:
                 label = 'old'
             class_labels.append(label)
-            
+
     # For abalone 2
     elif abalone == 2:
         for rings in to_be_predicted:
@@ -217,10 +217,17 @@ def manhattan_dist(instance_0, instance_1):
 
 
 def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild'):
-    
+    '''
+    Evaluate classifier based on the distance function, k value, and voting method.
+    data_set: 2 tuple. ([list of instances], [list of class labels])
+    metric: accuracy || recall || precision || error
+    dist: euclidean || cos || manhattan
+    k: positive integer
+    voting: ew || ild || id
+    '''
     score = 0
     partitioned_sets = partition_data(data_set)
-    # Perform validation as many times as there are are datasets. 
+    # Perform validation as many times as there are are datasets.
     for i in range(len(partitioned_sets)):
         test_data_set = partitioned_sets[i]
         training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
@@ -247,6 +254,10 @@ def combine_data_sets(training_subsets0, training_subsets1):
 
 
 def single_pass_eval(training_set, test_set, metric, dist, k, voting):
+    '''
+    Evaluate the classifier based on test_set.
+    The result will be averaged in 10-fold cross-validation.
+    '''
     predicted_classes = []
     for instance in test_set[0]:
         neighbors = get_neighbors(instance, training_set, k, dist)
@@ -284,15 +295,15 @@ def partition_data(data_set):
     partitioned_sets = []
     M = 10
     set_size = len(data_set[0])
-    # All partitions must be of this size. 
+    # All partitions must be of this size.
     partition_size = set_size // M
-    
+
     '''
-       These instances are the remainder after making all the partitions of the 
+       These instances are the remainder after making all the partitions of the
        same size and one element will be added to partitions (starting from the first) until
        we are out of the residual instances.
        So set size divider is the number of partitions (0th partition to (set_size_divider - 1)th partion)
-       which will have one element more. 
+       which will have one element more.
     '''
     set_size_divider = set_size % M
 
@@ -308,14 +319,14 @@ def partition_data(data_set):
     for row in data_list:
         instances.append(row[:len(row) - 1])
         class_labels.append(row[len(row)- 1])
-    
-    # The shuffled data set. 
+
+    # The shuffled data set.
     shuffled_data_set = (instances, class_labels)
 
     start = 0
 
-    # 10 fold cross validation. 
-    # Each elements of partitioned_sets will be used as test instance once. 
+    # 10 fold cross validation.
+    # Each elements of partitioned_sets will be used as test instance once.
     for i in range(10):
         if i < set_size_divider:
             partitioned_sets.append((shuffled_data_set[0][start:(start + partition_size + 1)],
@@ -331,7 +342,11 @@ def partition_data(data_set):
 
 
 
-def predict_class(neighbors, method = 'ew'):
+def predict_class(neighbors, method):
+    '''
+    Takes neighbors (list of class labels) and method (string that specifies
+    voting method) as arguments. Return the predicted class.
+    '''
     if method == 'ew':
         return predict_equal_weight(neighbors)
     elif method == 'ild':
@@ -449,7 +464,7 @@ def complete_recall(test_set, predicted_classes):
     sum_recall = 0
     for class_name in classes:
         sum_recall += recall(test_set, predicted_classes, class_name)
-        
+
     return sum_recall/len(classes)
 
 
@@ -475,7 +490,7 @@ def test_euclidean(data_set):
         #correct_dist = numpy.linalg.norm(numpy.asarray(row1) - numpy.asarray(row2))
 
 def test_cosine(data_set):
-    
+
     count = 0
     # Test for cosine distance correctness.
     for row1 in data_set[0]:
