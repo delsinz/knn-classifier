@@ -1,4 +1,10 @@
-""" Remember to add our names, student IDs here """
+"""
+Shreyash Patodia, Student ID: 767336
+Username: spatodia
+
+Mingyang Zhang, Student ID: 650242
+Username: mingyangz
+"""
 
 import csv
 from collections import Counter, defaultdict
@@ -10,7 +16,7 @@ def main():
     REMOVE ME BEFORE SUBMITTING
     '''
     # Data set which is a two tuple.
-    data_set = preprocess_data('data.data', 2)
+    data_set = preprocess_data('data.data', 3)
 
     # Choose k = 5 for the 2 case.
     evaluation(data_set, dist='euclidean', k=31)
@@ -406,7 +412,7 @@ def accuracy(test_set, predicted_classes, class_name):
         elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
             correct_predictions += 1
 
-    # print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length))
+    print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length))
     return correct_predictions/length*100
 
 
