@@ -20,7 +20,7 @@ def main():
     data_set = preprocess_data('data.data', 3)
 
     # Choose k = 5 for the 2 case.
-    evaluation(data_set, dist='euclidean', k=1)
+    evaluation(data_set, dist='euclidean', k=31)
 
 # Tested.
 # Returns ([lists of 8 attributes], [class_label])
@@ -51,22 +51,25 @@ def preprocess_data(filename, abalone=3):
    
     # Process instances so that the M, F and I values make more sense,
     # see docstring of convert_categorical_attribute for more info.
-    processed_instances = []
-    for instance in instances:
-        processed_instance = convert_categorical_attribute(instance,
-                             mean_numerical_value)
-        processed_instances.append(processed_instance)
+   
 
-    data_set = (processed_instances, class_labels)
+    data_set = (instances, class_labels)
 
     means = column_means(data_set)
     stdevs = column_stdevs(data_set, means)
- 
-
-    standardized_data_set = standardize_dataset(data_set, means, stdevs)
+    
+    
+    processed_instances = []
+    mean_numerical_value = sum(means)/len(means)
+    for instance in data_set[0]:
+        processed_instance = convert_categorical_attribute(instance,
+                             mean_numerical_value)
+        processed_instances.append(processed_instance)
+    
+    processed_data_set = (processed_instances, data_set[1])
     for i in range(10):
-        print(str(standardized_data_set[0][i]) + ' ' + str(standardized_data_set[1][i]))
-    return standardized_data_set
+        print(str(processed_data_set[0][i]) + ' ' + str(processed_data_set[1][i]))
+    return processed_data_set
 
 def read_file(filename, abalone):
     '''
@@ -103,7 +106,7 @@ def read_file(filename, abalone):
             count_numerical -= 1
             instances.append(instance[:len(instance) - 1])
             to_be_predicted.append(instance[len(instance) - 1])
-            
+
     mean_numerical_value = total_numerical/count_numerical
     # Set class labels
     class_labels = assign_class_label(to_be_predicted, abalone)
@@ -115,7 +118,7 @@ def column_means(data_set):
     instances = data_set[0]
     means = [0 for i in range(len(instances[0]))]
 
-    for i in range(len(instances[0])):
+    for i in range(1, len(instances[0])):
 	    col_values = [row[i] for row in instances]
 	    means[i] = sum(col_values) / float(len(instances))
     return means
@@ -124,7 +127,7 @@ def column_stdevs(data_set, means):
     instances = data_set[0]
     stdevs = [0 for i in range(len(instances[0]))]
 
-    for i in range(len(instances[0])):
+    for i in range(1, len(instances[0])):
 	    variance = [pow(row[i]-means[i], 2) for row in instances]
 	    stdevs[i] = sum(variance)
     stdevs = [sqrt(x/(float(len(instances)-1))) for x in stdevs]
@@ -133,7 +136,7 @@ def column_stdevs(data_set, means):
 def standardize_dataset(data_set, means, stdevs):
     instances = data_set[0]
     for row in instances:
-        for i in range(len(row)):
+        for i in range(1, len(row)):
             row[i] = (row[i] - means[i]) / stdevs[i]
     return (instances, data_set[1])
 
@@ -168,19 +171,6 @@ def assign_class_label(to_be_predicted, abalone):
 
     return class_labels
 
-def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild'):
-    
-    score = 0
-    partitioned_sets = partition_data(data_set)
-    # Perform validation as many times as there are are datasets. 
-    for i in range(len(partitioned_sets)):
-        test_data_set = partitioned_sets[i]
-        training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
-        # print("Length of the training set is:" + str(len(training_data_set[0])))
-        score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
-    print(str(k) + ", " + str(score / len(partitioned_sets)))
-
-
 # Break categorical attribute Sex into 3 binary attributes: M, F, I
 
 def convert_categorical_attribute(instance, mean_numerical_value):
@@ -198,9 +188,9 @@ def convert_categorical_attribute(instance, mean_numerical_value):
     if val == 'M':
         return [-mean_numerical_value] + instance[1:]
     elif val == 'F':
-        return [0] + instance[1:]
-    elif val == 'I':
         return [mean_numerical_value] + instance[1:]
+    elif val == 'I':
+        return [0] + instance[1:]
 
 def get_neighbors(instance, training_data_set, k, method):
     '''
@@ -339,6 +329,7 @@ def single_pass_eval(training_set, test_set, metric, dist, k, voting):
     '''
     predicted_classes = []
     for instance in test_set[0]:
+    
         neighbors = get_neighbors(instance, training_set, k, dist)
 
         # print("My neighbors: " + str(neighbors))
@@ -427,6 +418,7 @@ def predict_class(neighbors, method):
     Takes neighbors (list of class labels) and method (string that specifies
     voting method) as arguments. Return the predicted class.
     '''
+
     if method == 'ew':
         return predict_equal_weight(neighbors)
     elif method == 'ild':
