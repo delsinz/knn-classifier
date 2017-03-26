@@ -217,7 +217,14 @@ def manhattan_dist(instance_0, instance_1):
 
 
 def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild'):
-
+    '''
+    Evaluate classifier based on the distance function, k value, and voting method.
+    data_set: 2 tuple. ([list of instances], [list of class labels])
+    metric: accuracy || recall || precision || error
+    dist: euclidean || cos || manhattan
+    k: positive integer
+    voting: ew || ild || id
+    '''
     score = 0
     partitioned_sets = partition_data(data_set)
     # Perform validation as many times as there are are datasets.
@@ -247,6 +254,10 @@ def combine_data_sets(training_subsets0, training_subsets1):
 
 
 def single_pass_eval(training_set, test_set, metric, dist, k, voting):
+    '''
+    Evaluate the classifier based on test_set.
+    The result will be averaged in 10-fold cross-validation.
+    '''
     predicted_classes = []
     for instance in test_set[0]:
         neighbors = get_neighbors(instance, training_set, k, dist)
@@ -332,6 +343,10 @@ def partition_data(data_set):
 
 
 def predict_class(neighbors, method):
+    '''
+    Takes neighbors (list of class labels) and method (string that specifies
+    voting method) as arguments. Return the predicted class.
+    '''
     if method == 'ew':
         return predict_equal_weight(neighbors)
     elif method == 'ild':
