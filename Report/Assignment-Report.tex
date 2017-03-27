@@ -102,18 +102,18 @@ The experiment shows us that that the performance of all of the similarity metri
  \hline
  Classification Type & Parameters & Similarity Metric & Accuracy & Precision & Recall\\
  \hline
- Abalone-3 & k=29,voting=inv. distance &   euclidean & 0.7614  & 0.6420 & 0.6387\\
+ Abalone-3 & k=29,voting=inv. distance &   euclidean & 0.7676  & 0.6469 & 0.6487\\
  \hline
- Abalone-3 & k=29,voting=inv. distance &   minkowski & 0.7606 & 0.6479 & 0.6445\\
+ Abalone-3 & k=29,voting=inv. distance &   minkowski & 0.7663 & 0.6468 & 0.6473\\
  \hline
- Abalone-3 & k=29,voting=inv. distance &   manhattan & 0.7592  & 0.6428 & 0.6397\\ 
+ Abalone-3 & k=29,voting=inv. distance &   manhattan & 0.7641 & 0.6420 & 0.6436\\ 
  \hline
  \hline
- Abalone-2 & k=29,voting=inv. distance &   euclidean & 0.7847  & 0.7710 & 0.7389\\
+ Abalone-2 & k=29,voting=inv. distance &   euclidean & 0.7857  & 0.7714 & 0.7399\\
  \hline
- Abalone-2 & k=29,voting=inv. distance &   minkowski & 0.7826 & 0.7668 & 0.73496\\
+ Abalone-2 & k=29,voting=inv. distance &   minkowski & 0.7787 & 0.7654 & 0.7299\\
  \hline
- Abalone-2 & k=29,voting=inv. distance &   manhattan & 0.7830  & 0.7701 & 0.7372\\ 
+ Abalone-2 & k=29,voting=inv. distance &   manhattan & 0.7830  & 0.7683 & 0.7355\\ 
  \hline
  
 \end{tabular}
@@ -133,10 +133,15 @@ The experiment shows us that that the performance of all of the similarity metri
 
 For our validation framework we used 10-Fold Cross Validation, we first divide the dataset into 10 (approximately) equal partitions and then perform K-Nearest Neighbour classification by choosing each of the 10 partitions as our test set (and the amalgamation of the remaining 9 as our training set) for one run of the K-Nearest Neighbour algorithm. This leads to very stable evaluation metrics across different runs of the program since performing the algorithm 10 times means that any positive outlier is averaged out by negative ones.
 
-We also tested holdout, 5-Fold Cross Validation and 20-Fold Cross Validation and here is a graph of their accuracies for different runs:
+We also tested holdout, 5-Fold Cross Validation and 20-Fold Cross Validation and here is a graph of their accuracies for 10 different runs with abalone-2 and abalone-3 each:
 
 
-
+% Commands to include a figure:
+%\begin{figure}[!htb]
+%\centering
+% \includegraphics[width=0.5\textwidth]{BadExample.png}
+% \caption{\label{fig:frog}Bad Design Example}
+%\end{figure}
 
 
 
@@ -145,6 +150,7 @@ We also tested holdout, 5-Fold Cross Validation and 20-Fold Cross Validation and
 \subsection{Representation of Data}
 
 We are using a 2-tuple to represent the data set wherein the first element of the tuple is the list of instances and the second element of the data set is the list of class labels corresponding to the instances. 
+In our pre-processing of the data we determined that it was best to work with all of the attributes since
 
 \subsection{Some other remarks}
 

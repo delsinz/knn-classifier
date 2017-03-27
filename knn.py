@@ -19,6 +19,7 @@ def main():
     '''
     # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
+
     
     evaluation(data_set, dist='euclidean', voting='id', k=29)
     evaluation(data_set, dist='euclidean', voting='id', k=29)
@@ -229,11 +230,11 @@ def convert_categorical_attribute(instance, mean_numerical_value):
     # Assuming the attributes are provided in the given order
     val = instance[0]
     if val == 'M':
-        return [-mean_numerical_value] + instance[1:]
+        return   instance[1:]
     elif val == 'F':
-        return [mean_numerical_value] + instance[1:]
+        return instance[1:]
     elif val == 'I':
-        return [0] + instance[1:]
+        return  instance[1:]
 
 def get_neighbors(instance, training_data_set, k, method):
     '''
@@ -423,7 +424,7 @@ def prime_finder():
 def partition_data(data_set):
 
     partitioned_sets = []
-    M = 20
+    M = 10
     set_size = len(data_set[0])
     # All partitions must be of this size.
     partition_size = set_size // M
