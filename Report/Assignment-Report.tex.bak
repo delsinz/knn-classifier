@@ -150,7 +150,7 @@ We also tested holdout, 5-Fold Cross Validation and 20-Fold Cross Validation and
 \subsection{Representation of Data}
 
 We are using a 2-tuple to represent the data set wherein the first element of the tuple is the list of instances and the second element of the data set is the list of class labels corresponding to the instances. 
-In our pre-processing of the data we determined that it was best to work with all of the attributes since
+In our pre-processing of the data we determined that it was best to work with all of the attributes other than the Gender. We chose to remove gender from the reckoning because in order to use gender in our similarity metrics we had to do some sort of numerical transformation which was not guaranteed to be ideal. Moreover, our tests without gender being turned into -1, 0, 1 for Male, Infant and Female respectively show higher (but comparable) accuracy and comparable precision and recall to when gender was turned into an ordered value for similarity comparison. 
 
 \subsection{Some other remarks}
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  27 MAR 2017 22:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  27 MAR 2017 23:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -690,13 +690,24 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [1{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
+Underfull \hbox (badness 10000) in paragraph at lines 134--136
+
+ []
+
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2] (./Assignment-Report.aux) ) 
+[2]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[3] (./Assignment-Report.aux) ) 
 Here is how much of TeX's memory you used:
  13757 strings out of 493014
  268908 string characters out of 6133351
@@ -704,7 +715,7 @@ Here is how much of TeX's memory you used:
  17019 multiletter control sequences out of 15000+600000
  8263 words of font info for 30 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,11n,56p,627b,215s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,11n,56p,667b,215s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/
 public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pu
@@ -713,10 +724,10 @@ lic/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmr8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmsy10.pfb>
-Output written on Assignment-Report.pdf (2 pages, 81108 bytes).
+Output written on Assignment-Report.pdf (3 pages, 83121 bytes).
 PDF statistics:
- 42 PDF objects out of 1000 (max. 8388607)
- 30 compressed objects within 1 object stream
+ 45 PDF objects out of 1000 (max. 8388607)
+ 32 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

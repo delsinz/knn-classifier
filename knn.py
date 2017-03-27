@@ -20,32 +20,33 @@ def main():
     # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
 
-    
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9) 
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+
+
 
 
 
     data_set = preprocess_data('data.data', 2)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
+    holdout(data_set, 0.9)
 
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
-    evaluation(data_set, dist='euclidean', voting='id', k=29)
 
     
     # holdout(data_set, 0.75)
@@ -92,7 +93,7 @@ def preprocess_data(filename, abalone=3):
     A 2-tuple made of a list of instances and a list of class labels.
     '''
     # Load data
-    (instances, class_labels, mean_numerical_value) = read_file(filename, abalone)
+    (instances, class_labels) = read_file(filename, abalone)
 
     # Process instances so that the M, F and I values make more sense,
     # see docstring of convert_categorical_attribute for more info.
@@ -100,8 +101,7 @@ def preprocess_data(filename, abalone=3):
 
     processed_instances = []
     for instance in data_set[0]:
-        processed_instance = convert_categorical_attribute(instance,
-                                mean_numerical_value)
+        processed_instance = convert_categorical_attribute(instance)
         processed_instances.append(processed_instance)
     processed_data_set = (processed_instances, data_set[1])
     for i in range(10):
@@ -150,10 +150,9 @@ def read_file(filename, abalone):
             instances.append(instance[:len(instance) - 1])
             to_be_predicted.append(instance[len(instance) - 1])
 
-    mean_numerical_value = total_numerical/count_numerical
     # Set class labels
     class_labels = assign_class_label(to_be_predicted, abalone)
-    return (instances, class_labels, mean_numerical_value)
+    return (instances, class_labels)
 
 '''
 def column_means(data_set):
@@ -217,7 +216,7 @@ def assign_class_label(to_be_predicted, abalone):
 
 # Break categorical attribute Sex into 3 binary attributes: M, F, I
 
-def convert_categorical_attribute(instance, mean_numerical_value):
+def convert_categorical_attribute(instance):
     '''
     Converts Male ('M') to 0, Female ('F') to 2 times the
     mean_numerical_value of all the numerical values in the
@@ -424,7 +423,7 @@ def prime_finder():
 def partition_data(data_set):
 
     partitioned_sets = []
-    M = 10
+    M = 5
     set_size = len(data_set[0])
     # All partitions must be of this size.
     partition_size = set_size // M
