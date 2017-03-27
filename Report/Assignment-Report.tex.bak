@@ -131,9 +131,10 @@ The experiment shows us that that the performance of all of the similarity metri
 
 \subsection{M-Fold Cross Validation}
 
-For our validation framework we used 10-Fold Cross Validation, we first divide the dataset into 10 (approximately) equal partitions and then perform K-Nearest Neighbour classification by choosing each of the 10 partitions as our test set (and the amalgamation of the remaining 9 as our training set) for one run of the K-Nearest Neighbour algorithm. This leads to very stable evaluation metrics across different runs of the program since performing the algorithm 10 times means that any positive outlier is averaged out by negative ones.
+For our validation framework we used 10-Fold Cross Validation, we first divide the dataset into 10 (approximately) equal partitions and then perform K-Nearest Neighbour classification by choosing each of the 10 partitions as our test set (and the amalgamation of the remaining 9 as our training set) for one run of the K-Nearest Neighbour algorithm. This leads to very stable evaluation metrics across different runs of the program since performing the algorithm 10 times means that any positive outlier is (very likely to be) averaged out by negative ones
+. In our strategy, if the data set cannot be divided into partitions of equal sizes then we just keep on adding one instance to the partitions (starting at the 0th partition) until there are no instances remaining.\\
 
-We also tested holdout, 5-Fold Cross Validation and 20-Fold Cross Validation and here is a graph of their accuracies for 10 different runs with abalone-2 and abalone-3 each:
+We also tested 10-Fold Cross Validation with holdout (split at 90:10), 5-Fold Cross Validation and 20-Fold Cross Validation and here is a graph of their accuracies for 10 different runs with abalone-2 and abalone-3 each:
 
 
 % Commands to include a figure:
@@ -149,10 +150,13 @@ We also tested holdout, 5-Fold Cross Validation and 20-Fold Cross Validation and
 
 \subsection{Representation of Data}
 
-We are using a 2-tuple to represent the data set wherein the first element of the tuple is the list of instances and the second element of the data set is the list of class labels corresponding to the instances. 
-In our pre-processing of the data we determined that it was best to work with all of the attributes other than the Gender. We chose to remove gender from the reckoning because in order to use gender in our similarity metrics we had to do some sort of numerical transformation which was not guaranteed to be ideal. Moreover, our tests without gender being turned into -1, 0, 1 for Male, Infant and Female respectively show higher (but comparable) accuracy and comparable precision and recall to when gender was turned into an ordered value for similarity comparison. 
+We are using a 2-tuple to represent the data set wherein the first element of the tuple is the list of instances and the second element of the data set is the list of class labels corresponding to the instances. \\
+In our pre-processing of the data we determined that it was best to work with all of the attributes other than the Gender. We chose to remove gender from the reckoning because in order to use gender in our similarity metrics we had to do some sort of numerical transformation which was not guaranteed to be ideal. Moreover, our tests without gender being turned into -1, 0, 1 for Male, Infant and Female respectively show higher (but comparable) accuracy and comparable precision and recall to when gender was turned into an ordered value for similarity comparison, meaning that it was in the best interest of efficiency to get rid of gender.  \\
+We also found that height and shucked weight are very low for abalones with label "very-young" and is quite a bit higher for older abalones, so we decided to scale these two attributes by a factor of 2 to make this difference more pronounced. 
 
-\subsection{Some other remarks}
+\subsection{A good similarity metric}
+
+Since in our considerations of the abalone data set we are only looking at continuous data, and even if we did consider gender turning it into some sort of number representation may be desired. We also want to be able to approximate the age of the abalone (more rings ~ older), 
 
 
 
