@@ -9,19 +9,66 @@ Username: mingyangz
 import csv
 from collections import Counter, defaultdict
 from random import shuffle
-from math import sqrt
-from scipy.spatial import distance
+from math import sqrt, fabs
+# from scipy.spatial import distance
+import random
 
 def main():
     '''
     REMOVE ME BEFORE SUBMITTING
     '''
     # Data set which is a two tuple.
+    data_set = preprocess_data('data.data', 3)
+    
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+
+
+
     data_set = preprocess_data('data.data', 2)
 
-    # Choose k = 5 for the 2 case.
-    evaluation(data_set, dist='euclidean', k=31)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
+    evaluation(data_set, dist='euclidean', voting='id', k=29)
 
+    
+    # holdout(data_set, 0.75)
+
+def holdout(data_set, split_ratio):
+
+    instances = data_set[0]
+    classes = data_set[1]
+    training_instances = []
+    training_classes = []
+    test_instances = []
+    test_classes = []
+    for i in range(len(instances)):
+        if random.random() < split_ratio:
+            training_instances.append(instances[i])
+            training_classes.append(classes[i])
+
+        else:
+            test_instances.append(instances[i])
+            test_classes.append(classes[i])
+    training_data_set = (training_instances, training_classes)
+    test_data_set = (test_instances, test_classes)
+    print(single_pass_eval(training_data_set, test_data_set, dist='euclidean', k=5, voting='ew'))
+   
 # Tested.
 # Returns ([lists of 8 attributes], [class_label])
 def preprocess_data(filename, abalone=3):
@@ -43,29 +90,18 @@ def preprocess_data(filename, abalone=3):
     Return:
     A 2-tuple made of a list of instances and a list of class labels.
     '''
-   
     # Load data
-    
     (instances, class_labels, mean_numerical_value) = read_file(filename, abalone)
 
-   
     # Process instances so that the M, F and I values make more sense,
     # see docstring of convert_categorical_attribute for more info.
-   
-
     data_set = (instances, class_labels)
 
-    means = column_means(data_set)
-    stdevs = column_stdevs(data_set, means)
-    
-    
     processed_instances = []
-    mean_numerical_value = sum(means)/len(means)
     for instance in data_set[0]:
         processed_instance = convert_categorical_attribute(instance,
-                             mean_numerical_value)
+                                mean_numerical_value)
         processed_instances.append(processed_instance)
-    
     processed_data_set = (processed_instances, data_set[1])
     for i in range(10):
         print(str(processed_data_set[0][i]) + ' ' + str(processed_data_set[1][i]))
@@ -80,7 +116,6 @@ def read_file(filename, abalone):
     total_numerical = 0
     # Number of numerical values in the data set
     count_numerical = 0
-    
     with open(filename) as file:
         reader = csv.reader(file)
         # Construct instance list
@@ -94,7 +129,7 @@ def read_file(filename, abalone):
             for i in range(len(row)):
                 attribute = row[i]
                 try:
-                    if i in [3, 5, 7]:
+                    if i in [3, 5]:
                         instance.append(float(attribute)*2)
                         # Increment total_numerical for all numerical attributes.
                         total_numerical += float(attribute)
@@ -107,7 +142,8 @@ def read_file(filename, abalone):
                 except ValueError:
                     instance.append(attribute)
 
-            # Subtract the no. of rings as they are the value to be predicted.
+            # Subtract the no. of rings as they are the value to be predicted, and not
+            # part of the things we train on. 
             total_numerical -= instance[len(instance) - 1]
             count_numerical -= 1
             instances.append(instance[:len(instance) - 1])
@@ -118,7 +154,7 @@ def read_file(filename, abalone):
     class_labels = assign_class_label(to_be_predicted, abalone)
     return (instances, class_labels, mean_numerical_value)
 
-
+'''
 def column_means(data_set):
 
     instances = data_set[0]
@@ -145,6 +181,7 @@ def standardize_dataset(data_set, means, stdevs):
         for i in range(1, len(row)):
             row[i] = (row[i] - means[i]) / stdevs[i]
     return (instances, data_set[1])
+'''
 
 def assign_class_label(to_be_predicted, abalone):
     '''
@@ -223,12 +260,26 @@ def compare_instance(instance_0, instance_1, method):
     '''
     if method == 'euclidean':
         return euclidean_dist(instance_0, instance_1)
-    elif method == 'cos':
-        return cos_dist(instance_0, instance_1)
+    elif method == 'minkowski':
+        return minkowski_dist(instance_0, instance_1)
     elif method == 'manhattan':
         return manhattan_dist(instance_0, instance_1)
     else:
         return None
+
+
+def minkowski_dist(instance_0, instance_1):
+    '''
+    Computes and returns the Euclidean distance between
+    instance_0 and instance_1
+    '''
+    p_val = float(0.5)
+    # Assuming both instances have the same num of attributes
+    length = len(instance_0)
+    square_sum = 0
+    for i in range(length):
+        square_sum += abs(instance_0[i] - instance_1[i]) ** p_val
+    return square_sum ** (1/p_val)
 
 def euclidean_dist(instance_0, instance_1):
     '''
@@ -281,7 +332,7 @@ def manhattan_dist(instance_0, instance_1):
     return total
 
 
-def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild'):
+def evaluation(data_set, dist='euclidean', k=5, voting='ew'):
     '''
     Evaluate classifier based on the distance function, k value, and voting 
     method.
@@ -294,16 +345,24 @@ def evaluation(data_set, metric='accuracy', dist='euclidean', k=5, voting='ild')
     '''
     score = 0
     partitioned_sets = partition_data(data_set)
+    accuracy = 0
+    error = 0
+    precision = 0
+    recall = 0
     # Perform validation as many times as there are are datasets.
     for i in range(len(partitioned_sets)):
         test_data_set = partitioned_sets[i]
 
         training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
         # print("Length of the training set is:" + str(len(training_data_set[0])))
-        score += single_pass_eval(training_data_set, test_data_set, metric, dist, k, voting)
+        (run_accuracy, run_error, run_precsion, run_recall)= single_pass_eval(training_data_set, test_data_set, dist, k, voting)
+        accuracy += run_accuracy
+        error += run_error
+        precision += run_precsion
+        recall += run_recall
     #return score / len(partitioned_sets)
 
-    print(str(k) + ", " + str(score / len(partitioned_sets)))
+    print(str(k) + ", " + str(accuracy/ len(partitioned_sets)) + ", " + str(error/ len(partitioned_sets)) + ", " + str(precision/ len(partitioned_sets)) + ", " + str(recall/ len(partitioned_sets)))
 
 
 # Combine two lists of data sets into one set
@@ -328,7 +387,7 @@ def combine_data_sets(training_subsets0, training_subsets1):
     return (instances, class_labels)
 
 
-def single_pass_eval(training_set, test_set, metric, dist, k, voting):
+def single_pass_eval(training_set, test_set, dist, k, voting):
     '''
     Evaluate the classifier based on test_set.
     The result will be averaged in M-fold cross-validation.
@@ -337,22 +396,17 @@ def single_pass_eval(training_set, test_set, metric, dist, k, voting):
     for instance in test_set[0]:
     
         neighbors = get_neighbors(instance, training_set, k, dist)
-
         # print("My neighbors: " + str(neighbors))
         predicted_class = predict_class(neighbors, voting)
         # print("My predicted class: "  + str(predicted_class))
         predicted_classes.append(predicted_class)
+    
+    accuracy = complete_accuracy(test_set, predicted_classes)
+    error = complete_error(test_set, predicted_classes)
+    precision = complete_precision(test_set, predicted_classes)
+    recall = complete_recall(test_set, predicted_classes)
 
-    if metric == 'accuracy':
-        return complete_accuracy(test_set, predicted_classes)
-    elif metric == 'recall':
-        return complete_recall(test_set, predicted_classes)
-    elif metric == 'precision':
-        return complete_precision(test_set, predicted_classes)
-    elif metric == 'error':
-        return complete_error(test_set, predicted_classes)
-    else:
-        return None
+    return (accuracy, error, precision, recall)
 
 
 def prime_finder():
@@ -369,7 +423,7 @@ def prime_finder():
 def partition_data(data_set):
 
     partitioned_sets = []
-    M = 10
+    M = 20
     set_size = len(data_set[0])
     # All partitions must be of this size.
     partition_size = set_size // M
@@ -402,7 +456,7 @@ def partition_data(data_set):
 
     # 10 fold cross validation.
     # Each elements of partitioned_sets will be used as test instance once.
-    for i in range(10):
+    for i in range(M):
         if i < set_size_divider:
             partitioned_sets.append((
                 shuffled_data_set[0][start:(start + partition_size + 1)],
@@ -413,7 +467,6 @@ def partition_data(data_set):
                 shuffled_data_set[0][start:(start + partition_size)],
                 shuffled_data_set[1][start:(start + partition_size)]))
             start += partition_size
-
     return partitioned_sets
 
 
@@ -436,6 +489,7 @@ def predict_class(neighbors, method):
 
 
 def predict_equal_weight(neighbors):
+    # print('In equal weight')
     labels = [neighbor[0] for neighbor in neighbors]
     label_votes = dict(Counter(labels))
     return max(label_votes, key=label_votes.get)
@@ -491,9 +545,9 @@ def accuracy(test_set, predicted_classes, class_name):
         elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
             correct_predictions += 1
 
-    print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length) + " for class " + class_name)
+    #print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length) + " for class " + class_name)
 
-    return correct_predictions/length*100
+    return correct_predictions/length
 
 
 
@@ -502,6 +556,7 @@ def complete_accuracy(test_set, predicted_classes):
     Finds the accuracy for all the classes and averages them
     '''
     classes = list(set(test_set[1]))
+    #print(len(test_set[1]))
     sum_accuracy = 0
     for class_name in classes:
         sum_accuracy += accuracy(test_set, predicted_classes, class_name)
@@ -578,7 +633,7 @@ def complete_error(test_set, predicted_classes):
     '''
     Finds the error as 100 - accuracy of the system
     '''
-    error = 100 - complete_accuracy(test_set, predicted_classes)
+    error = 1 - complete_accuracy(test_set, predicted_classes)
     return error
 
 ''' Tests for the distance metrics '''

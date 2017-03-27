@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  27 MAR 2017 07:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  27 MAR 2017 21:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -622,6 +622,66 @@ ABD: EveryShipout initializing macros
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 
+Underfull \hbox (badness 10000) in paragraph at lines 70--71
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 87--88
+
+ []
+
+
+Overfull \hbox (6.48291pt too wide) in paragraph at lines 103--103
+[]\OT1/cmr/m/n/10.95 Classification
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 103--103
+[]\OT1/cmr/m/n/10.95 Similarity
+ []
+
+
+Overfull \hbox (1.75969pt too wide) in paragraph at lines 103--103
+[]\OT1/cmr/m/n/10.95 Accuracy| 
+ []
+
+
+Overfull \hbox (0.75592pt too wide) in paragraph at lines 103--103
+[]\OT1/cmr/m/n/10.95 Precision| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 105--105
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 107--107
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 109--109
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 112--112
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 114--114
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 116--116
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
@@ -636,30 +696,27 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2]
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[3] (./Assignment-Report.aux) ) 
+[2] (./Assignment-Report.aux) ) 
 Here is how much of TeX's memory you used:
- 13742 strings out of 493014
- 268754 string characters out of 6133351
- 333590 words of memory out of 5000000
- 17011 multiletter control sequences out of 15000+600000
- 5458 words of font info for 20 fonts, out of 8000000 for 9000
+ 13757 strings out of 493014
+ 268908 string characters out of 6133351
+ 337651 words of memory out of 5000000
+ 17019 multiletter control sequences out of 15000+600000
+ 8263 words of font info for 30 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,11n,56p,1317b,213s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,11n,56p,627b,215s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmr10.pfb>
-Output written on Assignment-Report.pdf (3 pages, 58118 bytes).
+public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmsy10.pfb>
+Output written on Assignment-Report.pdf (2 pages, 80979 bytes).
 PDF statistics:
- 29 PDF objects out of 1000 (max. 8388607)
- 20 compressed objects within 1 object stream
+ 42 PDF objects out of 1000 (max. 8388607)
+ 30 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 
