@@ -178,7 +178,7 @@ def read_file(filename, abalone):
             for i in range(len(row)):
                 attribute = row[i]
                 try:
-                    if i in [3, 5]:
+                    if i in [3, 4]:
                         instance.append(float(attribute)*2)
                         # Increment total_numerical for all numerical attributes.
                         total_numerical += float(attribute)

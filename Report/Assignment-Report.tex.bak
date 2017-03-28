@@ -48,7 +48,7 @@
  top=20mm,
 }
 \fancyheadoffset{0.1cm}
-\lhead{Mingyang Zhang : 65024, Shreyash Patodia : 767336}
+\lhead{Mingyang Zhang : 650242, Shreyash Patodia : 767336}
 \rhead{mingyang, spatodia}
 
 
@@ -164,7 +164,7 @@ We also tested 10-Fold Cross Validation with holdout (split at 90:10), 5-Fold Cr
 
 \\ 
 
-From the above graphs it is clear that cross-validation is far more consistent in terms of predictive accuracy than holdout. 
+From the above graphs it is clear that cross-validation is far more consistent in terms of predictive accuracy than holdout (similar plots were observed for precision and recall but the plots were not included for conciseness). 
 
 
 
@@ -182,7 +182,7 @@ Since in our considerations of the abalone data set we are only looking at conti
 
 \subsection{A good value of k}
 
-In order to find a good value of k what we did was 
+In order to find a good value of k what we did was vary k with different prime numbers between 
 
 
 \end{document}
