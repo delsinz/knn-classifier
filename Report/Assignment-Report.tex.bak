@@ -49,7 +49,7 @@
 }
 \fancyheadoffset{0.1cm}
 \lhead{Mingyang Zhang : 650242, Shreyash Patodia : 767336}
-\rhead{mingyang, spatodia}
+\rhead{mingyangz, spatodia}
 
 
 
@@ -60,18 +60,7 @@
 
 In this assignment we were asked to classify instances in the Abalone Dataset into one of two 
 ('young' or 'old') or three ('very young', 'old' and 'middle-age') categories. The classification method meant to be used was K-Nearest Neighbours. We could choose our similarity metrics, voting methods, evaluation methods and also the validation framework for the dataset. Our choices are listed below:
-\\\\
-{\centering
-\begin{tabular}{|p{3.5cm}||p{3.5cm}|p{3.5cm}|p{3.75cm}|}
- \hline
- {\bf Similarity Metric} & Euclidean Distance & Manhattan Distance & Minkowski Distance (with p = 0.5)\\
- \hline
- {\bf Voting Method} & Equality Weight Majority & Inverse Distance & Inverse Linear Distance \\ 
- \hline
- {\bf Evaluation Metric} & Accuracy and Error & Precision & Recall \\ 
- \hline
-\end{tabular} }
-\\\\ \\
+
 For our validation framework we use {\bf 10-Fold Cross Validation} (but also, implement holdout). 
 
  
@@ -99,7 +88,7 @@ Minkowski Distance:
 \\
 (We take pow = 0.5 for Minkowski distance, as it lets makes for a nice comparison with Euclidean. {\bf when we refer to Minkowski in this report we will talk about the specific case with pow = 0.5}) \\
 
-Euclidean takes sum of squares before finding the root, Manhattan is plain addition of distances values and Minkowski (with p = 0.5) takes the root of each value before summing them up and squaring the sum. We especially wanted to contrast Minkowski and Euclidean since Minkowski is actually going to amplify larger distances (since most distances are < 1) and Euclidean would tend to suppress it by squaring (square of number < 1 is less than the number itself). 
+Euclidean takes sum of squares before finding the root, Manhattan is plain addition of distances values and Minkowski (with p = 0.5) takes the root of each value before summing them up and squaring the sum. We especially wanted to contrast Minkowski and Euclidean since Minkowski is actually going to amplify larger distances (since most distances are less than 1) and Euclidean would tend to suppress it by squaring (square of number less than 1 is less than the number itself). 
 
 
 \subsection{Euclidean - as the best}
@@ -108,30 +97,7 @@ Our choices of Euclidean, Minkowski (p = 0.5) and Manhattan Distance all of whic
 
 (Note: All measurements in the tables are averages of 10 runs with 10 fold cross validation)
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|p{2cm}|p{3cm}||p{2cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
- \hline
- \multicolumn{6}{|c|}{Similarity Experiment} \\
- \hline
- Dataset & Parameters & Similarity Metric & Accuracy & Precision & Recall\\
- \hline
- Abalone-3 & k=29,voting=inv. distance &   euclidean & 0.7676  & 0.6469 & 0.6487\\
- \hline
- Abalone-3 & k=29,voting=inv. distance &   minkowski & 0.7663 & 0.6468 & 0.6473\\
- \hline
- Abalone-3 & k=29,voting=inv. distance &   manhattan & 0.7641 & 0.6420 & 0.6436\\ 
- \hline
- Abalone-2 & k=29,voting=inv. distance &   euclidean & 0.7857  & 0.7714 & 0.7399\\
- \hline
- Abalone-2 & k=29,voting=inv. distance &   minkowski & 0.7787 & 0.7654 & 0.7299\\
- \hline
- Abalone-2 & k=29,voting=inv. distance &   manhattan & 0.7830  & 0.7683 & 0.7355\\ 
- \hline
 
-\end{tabular}
-\caption{Table of experiments with different similarity metric}
-\end{table}
 \label{Figure 1}
 
 
@@ -187,42 +153,7 @@ x_i = x_i/(\sqrt{\sum_{i=1}^{n} x_i^2}) \text{, where } x_i \text{ is an attribu
 \\
 In our pre-processing of the data we determined that it was best to work with {\bf all of the attributes other than the gender} (we also tried removing some attributes during post-processing and seeing results but results were best when we used all of the continuous attributes). We chose to remove gender from the reckoning because in order to use gender in our similarity metrics we had to do some sort of transformation to numerical values which was not guaranteed to be ideal. Moreover, our results show that including gender lead to a decrease in accuracy, precision and recall (average over 10 runs of each). For example:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|p{2cm}|p{4cm}||p{2cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
- \hline
- \multicolumn{6}{|c|}{Similarity Experiment} \\
- \hline
- Gender Included & Parameters & Similarity Metric & Accuracy & Precision & Recall\\
- \hline
- No & k=29,voting=inverse distance &   euclidean & 0.7676  & 0.6469 & 0.6487\\
- \hline
- Yes & k=29,voting=inverse distance &   euclidean & 0.7542 & 0.6334 & 0.6373\\
- \hline
- No & k=29,voting=inverse distance &   manhattan & 0.7641 & 0.6420 & 0.6436\\ 
- \hline
- Yes & k=29,voting=inverse distance &  manhattan & 0.7531  & 0.6314 & 0.6452\\
- \hline
- No & k=29,voting=inverse distance &   minkowski & 0.7616 & 0.6291 & 0.6289\\
- \hline
- Yes & k=29,voting=inverse distance &   minkowski & 0.7578  & 0.6221 & 0.6219\\ 
- \hline
- No & k=29,voting=majority vote &   euclidean & 0.7631  & 0.6293 & 0.6321\\
- \hline
- Yes & k=29,voting=majority vote &   euclidean & 0.7564 & 0.6227 & 0.6287\\
- \hline
- No & k=29,voting=majority vote &   manhattan & 0.7626 & 0.6312 & 0.6156\\ 
- \hline
- Yes & k=29,voting=majority vote &  manhattan & 0.7539  & 0.6247 & 0.6128\\
- \hline
- No & k=29,voting=majority vote &   minkowski & 0.7610 & 0.6301 & 0.6245\\
- \hline
- Yes & k=29,voting=majority vote &   minkowski & 0.7512  & 0.6234 & 0.6178\\ 
- \hline
 
-\end{tabular}
-\caption{Table of experiment for different test scenarios with or without including gender, tests were run for Abalone-3}
-\end{table}
 
 We also found that height and whole weight are very low for abalones with label "very-young" and is quite a bit higher for older abalones, so we decided to scale these two attributes by a factor of 2 to make this difference more pronounced. This lead to an increase in accuracy, precision and recall by around 2\%. This step was taken on the basis of observations from the dataset, while trying to find the 
 attributes that separate the classes. The multiplication is done pre-normalization to not make sure we don't go past the bounds of normalization. 
@@ -272,24 +203,6 @@ w_j =
 
 Our experiments show that all voting methods work equally well with {\bf equal weight} surprisingly getting the ever so slightly better results. 
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|p{2cm}|p{4.5cm}||p{2cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
- \hline
- \multicolumn{6}{|c|}{Similarity Experiment} \\
- \hline
- Dataset & Parameters & Voting Method & Accuracy & Precision & Recall\\
- \hline
- Abalone-3 & k=29,distance = euclidean &   equal weight & 0.7666  & 0.6467 & 0.6478\\
- \hline
- Abalone-3 & k=29,distance = euclidean & inverse distance & 0.7636 & 0.6417 & 0.6425\\
- \hline
- Abalone-3 & k=29,distance = euclidean &  inverse linear distance & 0.7612 & 0.6378 & 0.6390\\ 
- \hline
-
-\end{tabular}
-\caption{Table of experiments with different voting methods (avg. over 10 runs)}
-\end{table}
 
 \section{Our evaluation methods}
 
