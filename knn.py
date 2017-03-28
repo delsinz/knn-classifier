@@ -13,6 +13,7 @@ from math import sqrt
 import random
 
 
+
 def main():
     data_set = preprocess_data('data.data', 3)
     ans = evaluate(data_set, 'accuracy', 'euclidean')
@@ -73,10 +74,10 @@ def evaluate(data_set, metric='accuracy', dist='euclidean', k=29, voting='ew'):
     voting: ew || ild || id
     '''
 
-    # Partition the data into 10-Folds. 
+    # Partition the data into 10-Folds.
     partitioned_sets = partition_data(data_set)
 
-    # Evaluation metrics. 
+    # Evaluation metrics.
     sum_accuracy = 0
     sum_error = 0
     sum_precision = 0
