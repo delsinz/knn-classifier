@@ -15,7 +15,7 @@ import random
 
 def main():
     data_set = preprocess_data('data.data', 3)
-    ans = evaluate(data_set, 'error', 'minkowski')
+    ans = evaluate(data_set, 'accuracy', 'euclidean')
     evaluate(data_set, 'error')
     print(ans)
 
@@ -682,8 +682,6 @@ def column_stdevs(data_set, means):
 
 
 '''
-
-
 
 if __name__ == '__main__':
     main()
