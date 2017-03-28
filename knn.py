@@ -16,8 +16,8 @@ import random
 def main():
     data_set = preprocess_data('data.data', 3)
     ans = evaluate(data_set, 'accuracy', 'euclidean')
-    evaluate(data_set, 'error')
     print(ans)
+    return
 
 '''========= Core functions ========='''
 
