@@ -19,7 +19,7 @@ def main():
     '''
     # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
-    evaluate(data_set, dist='euclidean', k=29, voting='ild')
+    evaluate(data_set, dist='minkowski', k=29, voting='ild')
 
 
 
@@ -541,7 +541,7 @@ def prime_finder():
 def partition_data(data_set):
 
     partitioned_sets = []
-    M = 5
+    M = 10
     set_size = len(data_set[0])
     # All partitions must be of this size.
     partition_size = set_size // M
