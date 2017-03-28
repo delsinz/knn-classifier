@@ -585,18 +585,8 @@ def single_pass_eval(training_set, test_set, dist, k, voting):
 
     return (accuracy, error, precision, recall)
 
-
-''' ========= Functions to help testing & comparison ========= '''
-'''
-def prime_finder():
-    not_primes = set(j for i in range(2, 11) for j in range(i*2, 100, i))
-    primes = [x for x in range(3, 100) if x not in not_primes]
-    return primes
-
-
-
 def holdout(data_set, split_ratio):
-
+    
     instances = data_set[0]
     classes = data_set[1]
     training_instances = []
@@ -617,6 +607,12 @@ def holdout(data_set, split_ratio):
                            dist='euclidean', k=29, voting='ew'))
 
 
+''' ========= Functions to help testing & comparison ========= '''
+'''
+def prime_finder():
+    not_primes = set(j for i in range(2, 11) for j in range(i*2, 100, i))
+    primes = [x for x in range(3, 100) if x not in not_primes]
+    return primes
 
 def test_euclidean(data_set):
     count = 0
@@ -629,7 +625,6 @@ def test_euclidean(data_set):
             if(euclidean_dist(row1, row2)
                 - distance.euclidean(row1, row2) >= 0.001):
                 print("Euclidean Distance is wrong\n")
-
 
 
 def test_cosine(data_set):
