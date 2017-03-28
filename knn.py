@@ -8,10 +8,9 @@ Username: mingyangz
 
 import csv
 from collections import Counter, defaultdict
-from random import shuffle
 from math import sqrt, fabs
-# from scipy.spatial import distance
 import random
+# from scipy.spatial import distance
 
 
 
@@ -566,7 +565,7 @@ def partition_data(data_set):
     data_list = [data_set[0][i]+[data_set[1][i]] for i in range(set_size)]
 
     # Random orderring, for fair partitioning
-    shuffle(data_list)
+    random.shuffle(data_list)
     # Construct new randomly ordered data set
 
     instances = []
