@@ -95,8 +95,9 @@ Here are some results we got from testing our similarity metrics while varying o
 The experiment shows us that that the performance of all of the similarity metrics is very closely lumped together, this is probably due to the fact that the distances are so small that it doesn't make much of a difference if we square or find the root of the values. 
 
 (Note: All measurements in the tables are averages of 10 runs and 10 fold cross validation was used for each run)
-
-\begin{tabular}{|p{2cm}|p{3cm}||p{2cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|     }
+\begin{table}
+\centering
+\begin{tabular}{|p{2cm}|p{3cm}||p{2cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
  \hline
  \multicolumn{6}{|c|}{Similarity Experiment} \\
  \hline
@@ -115,8 +116,11 @@ The experiment shows us that that the performance of all of the similarity metri
  \hline
  Abalone-2 & k=29,voting=inv. distance &   manhattan & 0.7830  & 0.7683 & 0.7355\\ 
  \hline
- 
+
 \end{tabular}
+\caption{Table of experiments with different similarity metric}
+\end{table}
+\label{Figure 1}
 
 
 % Commands to include a figure:
@@ -144,6 +148,24 @@ We also tested 10-Fold Cross Validation with holdout (split at 90:10), 5-Fold Cr
 % \caption{\label{fig:frog}Bad Design Example}
 %\end{figure}
 
+\begin{figure}[!htb]
+\centering
+
+\includegraphics[width=0.5\textwidth]{consistency_comparison_3.png}
+\caption{Comparison of consistency for different validation methods with Abalone-3}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+
+\includegraphics[width=0.5\textwidth]{consistency_comparison_2.png}
+\caption{Comparison of consistency for different validation methods with Abalone-2}
+\end{figure}
+
+\\ 
+
+From the above graphs it is clear that cross-validation is far more consistent in terms of predictive accuracy than holdout. 
+
 
 
 \section{Our choices}
@@ -156,8 +178,11 @@ We also found that height and shucked weight are very low for abalones with labe
 
 \subsection{A good similarity metric}
 
-Since in our considerations of the abalone data set we are only looking at continuous data, and even if we did consider gender turning it into some sort of number representation may be desired. We also want to be able to approximate the age of the abalone (more rings ~ older), 
+Since in our considerations of the abalone data set we are only looking at continuous data (removing the gender attribute altogether), and even if we did consider gender turning it into some sort of number representation would probably be desired. We also want to be able to approximate the age of the abalone (more rings ~ older), We know that the abalones with similar weight, height, diameter will probably fall into similar age categories. Something like Jaccard or Dice Similarity would only check for equality and would not fit in well here since we are dealing with numbers. Moreover, cosine similarity would give a small angle (high similarity) even if two items were of vastly different sizes if they had similar proportions. So we chose to use Euclidean, Minkowski and Manhattan Distance all of which would try to measure difference in the attributes of instances and we believe any of these three would be a fair choice for this dataset. For the sort of representation we use Euclidean Distance seems to be the best choice as it gives us higher accuracy, precision and recall consistently as seen in Table 1. 
 
+\subsection{A good value of k}
+
+In order to find a good value of k what we did was 
 
 
 \end{document}
