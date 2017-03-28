@@ -425,6 +425,7 @@ def precision(test_set, predicted_classes, class_name):
     if true_positives + false_positives == 0:
         return 1
     else:
+        print(true_positives/(true_positives + false_positives))
         return true_positives/(true_positives + false_positives)
 
 
