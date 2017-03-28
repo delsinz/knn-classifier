@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  29 MAR 2017 08:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  29 MAR 2017 09:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -632,22 +632,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 69--70
  []
 
 
-Overfull \hbox (4.47647pt too wide) in paragraph at lines 65--76
-[][]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 65--76
+Underfull \hbox (badness 10000) in paragraph at lines 61--76
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 65--76
+Overfull \hbox (4.47647pt too wide) in paragraph at lines 61--76
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 61--76
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 65--76
+Underfull \hbox (badness 10000) in paragraph at lines 61--76
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 61--76
 
  []
 
@@ -894,28 +899,25 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[6] (./Assignment-Report.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+[6] (./Assignment-Report.aux) ) 
 Here is how much of TeX's memory you used:
  13781 strings out of 493014
  269482 string characters out of 6133351
- 340653 words of memory out of 5000000
+ 340663 words of memory out of 5000000
  17037 multiletter control sequences out of 15000+600000
  8571 words of font info for 31 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  62i,11n,56p,1193b,280s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
-/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
-usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
-r/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
-local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/loc
-al/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Assignment-Report.pdf (6 pages, 212435 bytes).
+</usr/local/texlive/2016/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmr8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmsy10.pfb>
+Output written on Assignment-Report.pdf (6 pages, 212420 bytes).
 PDF statistics:
  67 PDF objects out of 1000 (max. 8388607)
  42 compressed objects within 1 object stream

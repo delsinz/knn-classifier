@@ -59,8 +59,8 @@
 
 
 In this assignment we were asked to classify instances in the Abalone Dataset into one of two 
-('young' or 'old') or three ('very young', 'old' and 'middle-age') categories. The classification method meant to be used was K-Nearest Neighbours. We could choose our similarity metrics, voting methods, evaluation methods and also the validation framework for the dataset. Our choices are listed below:\\
-
+('young' or 'old') or three ('very young', 'old' and 'middle-age') categories. The classification method meant to be used was K-Nearest Neighbours. We could choose our similarity metrics, voting methods, evaluation methods and also the validation framework for the dataset. Our choices are listed below:
+\\\\
 {\centering
 \begin{tabular}{|p{3.5cm}||p{3.5cm}|p{3.5cm}|p{3.75cm}|}
  \hline
@@ -78,9 +78,9 @@ For our validation framework we use {\bf 10-Fold Cross Validation} (but also, im
 
 \section{Similarity Metrics}
 
-\subsection{Euclidean, Manhattan and Minkowski- as good choices}
+\subsection{Euclidean, Manhattan and Minkowski - as good choices}
 
-The Abalone dataset contains eight attributes out of which 7 are of a continuous nature, so it made sense to us to use some sort of distance metric to evaluate similarity instead of checking for equality  (for intersection, like for Jaccard and Dice Similarity) or something like cosine similarity, which would compare the angles between the abalones and would assign high similarity to abalones with similar proportions but with very different sizes (and thus, possibly different ages as living being grow). If p and q are the instances to be compared the formula for our similarity metrics are: \\
+The Abalone dataset contains eight attributes out of which 7 are of a continuous nature, so it made sense to us to use some sort of distance metric to evaluate similarity instead of checking for equality  (like for Jaccard and Dice Similarity) or something like cosine similarity, which would compare the angles between the abalones and would assign high similarity to abalones with similar proportions but with very different sizes (and thus, possibly different ages as living being grow). If p and q are the instances to be compared the formula for our similarity metrics are: \\
 
 Euclidean Distance:
 \begin{equation}
