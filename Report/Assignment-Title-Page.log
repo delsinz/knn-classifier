@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  27 MAR 2017 06:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  29 MAR 2017 09:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -565,7 +565,7 @@ png>] (./Assignment-Title-Page.aux) )
 Here is how much of TeX's memory you used:
  13170 strings out of 493014
  260700 string characters out of 6133351
- 311338 words of memory out of 5000000
+ 311339 words of memory out of 5000000
  16440 multiletter control sequences out of 15000+600000
  9505 words of font info for 34 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -575,7 +575,7 @@ type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2016/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmti12.pfb>
-Output written on Assignment-Title-Page.pdf (1 page, 50141 bytes).
+Output written on Assignment-Title-Page.pdf (1 page, 50345 bytes).
 PDF statistics:
  29 PDF objects out of 1000 (max. 8388607)
  19 compressed objects within 1 object stream
