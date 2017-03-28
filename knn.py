@@ -8,16 +8,16 @@ Username: mingyangz
 
 import csv
 from collections import Counter, defaultdict
-from random import shuffle
 from math import sqrt, fabs
-# from scipy.spatial import distance
 import random
+# from scipy.spatial import distance
+
+
+
+
+
 
 def main():
-    '''
-    REMOVE ME BEFORE SUBMITTING
-    '''
-    # Data set which is a two tuple.
     data_set = preprocess_data('data.data', 3)
     evaluation(data_set, dist='euclidean', k=31, voting='id')
 
@@ -120,16 +120,22 @@ def evaluation(data_set, dist='euclidean', k=5, voting='ew'):
     for i in range(len(partitioned_sets)):
         test_data_set = partitioned_sets[i]
 
-        training_data_set = combine_data_sets(partitioned_sets[:i], partitioned_sets[i+1:])
+        training_data_set = combine_data_sets(partitioned_sets[:i],
+                                              partitioned_sets[i+1:])
         # print("Length of the training set is:" + str(len(training_data_set[0])))
-        (run_accuracy, run_error, run_precsion, run_recall)= single_pass_eval(training_data_set, test_data_set, dist, k, voting)
+        (run_accuracy, run_error, run_precsion, run_recall) = single_pass_eval(
+        training_data_set, test_data_set, dist, k, voting)
         accuracy += run_accuracy
         error += run_error
         precision += run_precsion
         recall += run_recall
     #return score / len(partitioned_sets)
 
-    print(str(k) + ", " + str(accuracy/ len(partitioned_sets)) + ", " + str(error/ len(partitioned_sets)) + ", " + str(precision/ len(partitioned_sets)) + ", " + str(recall/ len(partitioned_sets)))
+    print(str(k) + ", "
+    + str(accuracy/ len(partitioned_sets)) + ", "
+    + str(error/ len(partitioned_sets)) + ", "
+    + str(precision/ len(partitioned_sets)) + ", "
+    + str(recall/ len(partitioned_sets)))
 
 
 
@@ -158,8 +164,8 @@ def predict_class(neighbors, method):
 
 def read_file(filename, abalone):
     '''
-    Reads the file and returns our dataset along with some the mean_numerical_value
-    of the dataset
+    Reads the file and returns our dataset along with some the
+    mean_numerical_value of the dataset
     '''
      # Total value of the numerical values
     total_numerical = 0
@@ -191,8 +197,8 @@ def read_file(filename, abalone):
                 except ValueError:
                     instance.append(attribute)
 
-            # Subtract the no. of rings as they are the value to be predicted, and not
-            # part of the things we train on.
+            # Subtract the no. of rings as they are the value to be predicted,
+            # and not part of the things we train on.
             total_numerical -= instance[len(instance) - 1]
             count_numerical -= 1
             instances.append(instance[:len(instance) - 1])
@@ -384,8 +390,6 @@ def accuracy(test_set, predicted_classes, class_name):
         elif test_set[1][i] != class_name and predicted_classes[i] != class_name:
             correct_predictions += 1
 
-    #print("Correctly predicted : " + str(correct_predictions) + " out of " + str(length) + " for class " + class_name)
-
     return correct_predictions/length
 
 
@@ -550,10 +554,10 @@ def partition_data(data_set):
 
     '''
        These instances are the remainder after making all the partitions of the
-       same size and one element will be added to partitions (starting from the first) until
-       we are out of the residual instances.
-       So set size divider is the number of partitions (0th partition to (set_size_divider - 1)th partion)
-       which will have one element more.
+       same size and one element will be added to partitions (starting from the
+       first) until we are out of the residual instances.
+       So set size divider is the number of partitions (0th partition to
+       (set_size_divider - 1)th partion) which will have one element more.
     '''
     set_size_divider = set_size % M
 
@@ -561,7 +565,7 @@ def partition_data(data_set):
     data_list = [data_set[0][i]+[data_set[1][i]] for i in range(set_size)]
 
     # Random orderring, for fair partitioning
-    shuffle(data_list)
+    random.shuffle(data_list)
     # Construct new randomly ordered data set
 
     instances = []
@@ -615,7 +619,8 @@ def holdout(data_set, split_ratio):
             test_classes.append(classes[i])
     training_data_set = (training_instances, training_classes)
     test_data_set = (test_instances, test_classes)
-    print(single_pass_eval(training_data_set, test_data_set, dist='euclidean', k=5, voting='ew'))
+    print(single_pass_eval(training_data_set, test_data_set,
+                           dist='euclidean', k=5, voting='ew'))
 
 
 
