@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  28 MAR 2017 11:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.29)  29 MAR 2017 05:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -622,67 +622,32 @@ ABD: EveryShipout initializing macros
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 70--71
+Underfull \hbox (badness 10000) in paragraph at lines 61--63
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
+Underfull \hbox (badness 1377) in paragraph at lines 69--70
+[]\OT1/cmr/m/n/10.95 Inverse Lin-ear Dis-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 65--76
 
  []
 
 
-Overfull \hbox (6.48291pt too wide) in paragraph at lines 104--104
-[]\OT1/cmr/m/n/10.95 Classification
+Underfull \hbox (badness 10000) in paragraph at lines 65--76
+
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 104--104
-[]\OT1/cmr/m/n/10.95 Similarity
+Underfull \hbox (badness 10000) in paragraph at lines 83--84
+
  []
 
 
-Overfull \hbox (1.75969pt too wide) in paragraph at lines 104--104
-[]\OT1/cmr/m/n/10.95 Accuracy| 
- []
-
-
-Overfull \hbox (0.75592pt too wide) in paragraph at lines 104--104
-[]\OT1/cmr/m/n/10.95 Precision| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 108--108
-[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 110--110
-[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 113--113
-[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 115--115
-[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 117--117
-[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 138--140
+Underfull \hbox (badness 10000) in paragraph at lines 98--101
 
  []
 
@@ -695,54 +660,247 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [1{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
-<consistency_comparison_3.png, id=16, 462.528pt x 346.896pt>
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+[]\OT1/cmr/m/n/10.95 Similarity
+ []
+
+
+Overfull \hbox (1.75969pt too wide) in paragraph at lines 118--118
+[]\OT1/cmr/m/n/10.95 Accuracy| 
+ []
+
+
+Overfull \hbox (0.75592pt too wide) in paragraph at lines 118--118
+[]\OT1/cmr/m/n/10.95 Precision| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 120--120
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 122--122
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 124--124
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 126--126
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 128--128
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 130--130
+[]\OT1/cmr/m/n/10.95 k=29,voting=inv.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--152
+
+ []
+
+<consistency_comparison_3.png, id=17, 462.528pt x 346.896pt>
 File: consistency_comparison_3.png Graphic file (type png)
 
 <use consistency_comparison_3.png>
-Package pdftex.def Info: consistency_comparison_3.png used on input line 154.
+Package pdftex.def Info: consistency_comparison_3.png used on input line 166.
 (pdftex.def)             Requested size: 225.48764pt x 169.11772pt.
 
-<consistency_comparison_2.png, id=18, 462.528pt x 346.896pt>
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[2] <consistency_comparison_2.png, id=22, 462.528pt x 346.896pt>
 File: consistency_comparison_2.png Graphic file (type png)
 
 <use consistency_comparison_2.png>
-Package pdftex.def Info: consistency_comparison_2.png used on input line 161.
+Package pdftex.def Info: consistency_comparison_2.png used on input line 173.
 (pdftex.def)             Requested size: 225.48764pt x 169.11772pt.
 
+Underfull \hbox (badness 10000) in paragraph at lines 183--185
+
+ []
+
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2 <./consistency_comparison_3.png>]
+[3 <./consistency_comparison_3.png> <./consistency_comparison_2.png>]
+Underfull \hbox (badness 1796) in paragraph at lines 197--197
+[]\OT1/cmr/m/n/10.95 Gender In-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 197--197
+[]\OT1/cmr/m/n/10.95 Similarity
+ []
+
+
+Overfull \hbox (1.75969pt too wide) in paragraph at lines 197--197
+[]\OT1/cmr/m/n/10.95 Accuracy| 
+ []
+
+
+Overfull \hbox (0.75592pt too wide) in paragraph at lines 197--197
+[]\OT1/cmr/m/n/10.95 Precision| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 199--199
+[]\OT1/cmr/m/n/10.95 k=29,voting=inverse
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+[]\OT1/cmr/m/n/10.95 k=29,voting=inverse
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 203--203
+[]\OT1/cmr/m/n/10.95 k=29,voting=inverse
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 205--205
+[]\OT1/cmr/m/n/10.95 k=29,voting=inverse
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 207--207
+[]\OT1/cmr/m/n/10.95 k=29,voting=inverse
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 209--209
+[]\OT1/cmr/m/n/10.95 k=29,voting=inverse
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 211--211
+[]\OT1/cmr/m/n/10.95 k=29,voting=majority
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 213--213
+[]\OT1/cmr/m/n/10.95 k=29,voting=majority
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 215--215
+[]\OT1/cmr/m/n/10.95 k=29,voting=majority
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--217
+[]\OT1/cmr/m/n/10.95 k=29,voting=majority
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 219--219
+[]\OT1/cmr/m/n/10.95 k=29,voting=majority
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--221
+[]\OT1/cmr/m/n/10.95 k=29,voting=majority
+ []
+
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[3 <./consistency_comparison_2.png>] (./Assignment-Report.aux) ) 
+[4] <k_accuracies_3.png, id=31, 362.3136pt x 217.7736pt>
+File: k_accuracies_3.png Graphic file (type png)
+
+<use k_accuracies_3.png>
+Package pdftex.def Info: k_accuracies_3.png used on input line 240.
+(pdftex.def)             Requested size: 225.48764pt x 135.52995pt.
+ <k_accuracies_2.png, id=32, 362.3136pt x 217.7736pt>
+File: k_accuracies_2.png Graphic file (type png)
+
+<use k_accuracies_2.png>
+Package pdftex.def Info: k_accuracies_2.png used on input line 247.
+(pdftex.def)             Requested size: 225.48764pt x 135.52995pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 258--261
+
+ []
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[5 <./k_accuracies_3.png> <./k_accuracies_2.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 282--282
+[]\OT1/cmr/m/n/10.95 Voting
+ []
+
+
+Overfull \hbox (1.75969pt too wide) in paragraph at lines 282--282
+[]\OT1/cmr/m/n/10.95 Accuracy| 
+ []
+
+
+Overfull \hbox (0.75592pt too wide) in paragraph at lines 282--282
+[]\OT1/cmr/m/n/10.95 Precision| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 284--284
+[]\OT1/cmr/m/n/10.95 equal
+ []
+
+
+Underfull \hbox (badness 1817) in paragraph at lines 288--288
+[]\OT1/cmr/m/n/10.95 inverse lin-
+ []
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[6] (./Assignment-Report.aux) ) 
 Here is how much of TeX's memory you used:
- 13773 strings out of 493014
- 269286 string characters out of 6133351
- 338661 words of memory out of 5000000
- 17032 multiletter control sequences out of 15000+600000
- 8263 words of font info for 30 fonts, out of 8000000 for 9000
+ 13781 strings out of 493014
+ 269482 string characters out of 6133351
+ 340662 words of memory out of 5000000
+ 17037 multiletter control sequences out of 15000+600000
+ 8571 words of font info for 31 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,11n,56p,1092b,280s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/tex
-live/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texl
-ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texli
-ve/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texliv
-e/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/
-2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/20
-16/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2016/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Assignment-Report.pdf (3 pages, 154201 bytes).
+ 62i,12n,56p,1014b,280s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2016/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmr8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmsy10.pfb>
+Output written on Assignment-Report.pdf (6 pages, 210788 bytes).
 PDF statistics:
- 50 PDF objects out of 1000 (max. 8388607)
- 33 compressed objects within 1 object stream
+ 67 PDF objects out of 1000 (max. 8388607)
+ 42 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 23 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 33 words of extra memory for PDF output out of 10000 (max. 10000000)
 
